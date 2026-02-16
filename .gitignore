@@ -1,0 +1,4 @@
+libs
+.idea
+cmake-build-debug
+*.dll
