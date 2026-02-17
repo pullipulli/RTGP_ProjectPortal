@@ -16,8 +16,8 @@ Universita' degli Studi di Milano
 
 // we use GLM to create the view matrix and to manage camera transformations
 #include <glad/glad.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include <../glm/glm.hpp>
+#include <../glm/gtc/matrix_transform.hpp>
 
 // possible camera movements
 enum Camera_Movement {
@@ -60,6 +60,10 @@ public:
     GLfloat MovementCompensation = 1.0f;
     // Camera rotation parameter
     GLfloat MouseSensitivity;
+    GLfloat FOV = 45.0f;
+    GLfloat aspectRatio = 16.f/9.f;
+    GLfloat nearPlane = 0.1f;
+    GLfloat farPlane = 10000.0f;
 
     //////////////////////////////////////////
     // simplified constructor
@@ -72,11 +76,24 @@ public:
         this->UpdateCameraVectors();
     }
 
+    Camera(glm::vec3 position, GLboolean onGround, float FOV, float aspectRatio, float nearPlaneZ, float farPlaneZ) : Camera(position, onGround)
+    {
+        this->FOV = FOV;
+        this->aspectRatio = aspectRatio;
+        this->nearPlane = nearPlaneZ;
+        this->farPlane = farPlaneZ;
+    }
+
     //////////////////////////////////////////
     // it returns the current view matrix
-    glm::mat4 GetViewMatrix()
+    glm::mat4 GetViewMatrix() const
     {
         return glm::lookAt(this->Position, this->Position + this->Front, this->Up);
+    }
+
+    glm::mat4 GetProjectionMatrix() const
+    {
+        return glm::perspective(this->FOV, this->aspectRatio, this->nearPlane, this->farPlane);
     }
 
     //////////////////////////////////////////
