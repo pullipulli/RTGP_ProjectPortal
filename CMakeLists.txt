@@ -49,7 +49,8 @@ set(IMGUI_BACKENDS
         ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
 )
 
-add_executable(RTGPProject_Portal src/main.cpp include ${IMGUI_SOURCES} ${IMGUI_BACKENDS})
+add_executable(RTGPProject_Portal src/main.cpp include ${IMGUI_SOURCES} ${IMGUI_BACKENDS}
+        src/Application.cpp)
 
 target_include_directories(RTGPProject_Portal PUBLIC
         libs/glm

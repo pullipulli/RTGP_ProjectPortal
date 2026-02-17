@@ -25,8 +25,6 @@
 
 GLint screenWidth = 1280, screenHeight = 720;
 
-std::string glsl_version = "#version 410 core";
-
 Camera *camera;
 
 // we initialize an array of booleans for each keyboard key
