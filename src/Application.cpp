@@ -9,10 +9,10 @@
 #endif
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <../glm/gtc/matrix_inverse.hpp>
 #include <../glm/gtc/matrix_transform.hpp>
 #include <../glm/gtc/type_ptr.hpp>
 
+#include "Input.h"
 #include "utils/camera.h"
 #include "utils/model.h"
 
@@ -53,15 +53,13 @@ void Application::StartApplication()
     }
     glfwMakeContextCurrent(window);
 
-    // TODO setup input callbacks; maybe add input manager
-
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
         std::cout << "Failed to initialize GLAD" << std::endl;
         return;
     }
+
+    input = new Input(window, GL_TRUE);
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -74,7 +72,7 @@ void Application::StartApplication()
     ImGui_ImplGlfw_InitForOpenGL(window, true);          // Second param install_callback=true will install GLFW callbacks and chain to existing ones.
     ImGui_ImplOpenGL3_Init();
 
-        while(!glfwWindowShouldClose(window))
+    while(!glfwWindowShouldClose(window))
     {
         currentFrameTime = glfwGetTime();
         deltaTime = currentFrameTime - lastFrameTime;
@@ -83,7 +81,11 @@ void Application::StartApplication()
         // Check is an I/O event is happening
         glfwPollEvents();
 
-        // TODO apply_camera_movements();
+        input->UpdateInputEvents();
+
+        glm::vec2 currentMouseDelta = input->GetMouseDelta();
+
+        camera->ProcessMouseMovement(currentMouseDelta.x, currentMouseDelta.y);
 
         // TODO Implement GUI
         // ImGui_ImplOpenGL3_NewFrame();
@@ -124,3 +126,19 @@ void Application::StartApplication()
 
     glfwTerminate();
 }
+
+void Application::ApplyCameraMovements()
+{
+    GLboolean diagonal_movement = (input->IsKeyPressed(GLFW_KEY_W) ^ input->IsKeyPressed(GLFW_KEY_S)) && (input->IsKeyPressed(GLFW_KEY_A) ^ input->IsKeyPressed(GLFW_KEY_D));
+    camera->SetMovementCompensation(diagonal_movement);
+
+    if(input->IsKeyPressed(GLFW_KEY_W))
+        camera->ProcessKeyboard(FORWARD, deltaTime);
+    if(input->IsKeyPressed(GLFW_KEY_S))
+        camera->ProcessKeyboard(BACKWARD, deltaTime);
+    if(input->IsKeyPressed(GLFW_KEY_A))
+        camera->ProcessKeyboard(LEFT, deltaTime);
+    if(input->IsKeyPressed(GLFW_KEY_D))
+        camera->ProcessKeyboard(RIGHT, deltaTime);
+}
+

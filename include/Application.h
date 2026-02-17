@@ -5,6 +5,7 @@
 #pragma once
 
 class Camera;
+class Input;
 
 class Application
 {
@@ -20,4 +21,7 @@ private:
     float currentFrameTime = 0;
 
     Camera *camera;
+
+    void ApplyCameraMovements();
+    Input *input;
 };

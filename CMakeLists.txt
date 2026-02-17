@@ -24,15 +24,27 @@ target_include_directories(glad PUBLIC libs/glad/include)
 set(ASSIMP_ROOT libs/assimp)
 
 find_library(ASSIMP_LIB
-    NAMES assimp-vc143-mt
+    NAMES assimp-vc143-mt.lib
     PATHS ${ASSIMP_ROOT}/lib/x64
         ${ASSIMP_ROOT}/lib
     NO_DEFAULT_PATH
 )
 
+find_file(ASSIMP_DLL
+    NAMES assimp-vc143-mt.dll
+    PATHS ${ASSIMP_ROOT}/bin/x64
+        ${ASSIMP_ROOT}/bin
+    NO_DEFAULT_PATH
+)
+
 if(NOT ASSIMP_LIB)
-    message(FATAL_ERROR "ERRORE: Non trovo assimp-vc143-mt.lib in libs/assimp/lib/x64. Controlla dove hai copiato i file!")
+    message(FATAL_ERROR "Can't find assimp-vc143-mt.lib file")
 endif()
+
+if(NOT ASSIMP_DLL)
+    message(FATAL_ERROR "Can't find assimp-vc143-mt.dll file")
+endif()
+
 
 set(IMGUI_DIR libs/imgui)
 
@@ -50,7 +62,9 @@ set(IMGUI_BACKENDS
 )
 
 add_executable(RTGPProject_Portal src/main.cpp include ${IMGUI_SOURCES} ${IMGUI_BACKENDS}
-        src/Application.cpp)
+        src/Input.cpp
+        src/Application.cpp
+)
 
 target_include_directories(RTGPProject_Portal PUBLIC
         libs/glm
@@ -74,4 +88,10 @@ target_link_libraries(RTGPProject_Portal
         LinearMath
         ${ASSIMP_LIB}
         ${CMAKE_DL_LIBS}
+)
+
+add_custom_command(TARGET RTGPProject_Portal POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${ASSIMP_DLL}"
+        "$<TARGET_FILE_DIR:RTGPProject_Portal>"
 )
