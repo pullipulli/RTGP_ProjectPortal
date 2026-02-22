@@ -46,7 +46,8 @@ struct Vertex {
 };
 
 /////////////////// MESH class ///////////////////////
-class Mesh {
+class Mesh
+{
 public:
     // data structures for vertices, and indices of vertices (for faces)
     vector<Vertex> vertices;

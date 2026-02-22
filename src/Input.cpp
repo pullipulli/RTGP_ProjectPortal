@@ -33,12 +33,11 @@ glm::vec2 Input::GetMouseDelta()
     }
 
     float deltaMouseX = xpos - lastMouseX;
-    float deltaMouseY = lastMouseX - ypos;
+    float deltaMouseY = lastMouseY - ypos;
 
     lastMouseX = xpos;
     lastMouseY = ypos;
 
-    glm::vec2(deltaMouseX, deltaMouseY);
     return glm::vec2(deltaMouseX, deltaMouseY);
 }
 

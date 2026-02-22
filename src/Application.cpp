@@ -13,6 +13,7 @@
 #include <../glm/gtc/type_ptr.hpp>
 
 #include "Input.h"
+#include "gtc/matrix_inverse.hpp"
 #include "utils/camera.h"
 #include "utils/model.h"
 
@@ -33,7 +34,6 @@ Application::Application(float screenWidth, float screenHeight)
 : screenWidth(screenWidth), screenHeight(screenHeight)
 {
     camera = new Camera(glm::vec3(0,0,7), GL_FALSE, 45.f, screenWidth/screenHeight, 0.1f, 100000.f);
-
 }
 
 void Application::StartApplication()
@@ -72,6 +72,13 @@ void Application::StartApplication()
     ImGui_ImplGlfw_InitForOpenGL(window, true);          // Second param install_callback=true will install GLFW callbacks and chain to existing ones.
     ImGui_ImplOpenGL3_Init();
 
+    Shader shader("shaders/vertex/00_basic.vert", "shaders/fragment/00_basic.frag");
+    Model portalModel("../assets/models/portal.obj", shader);
+    // Model and Normal transformation matrices for the objects in the scene: we set to identity
+    glm::mat4 portalModelMatrix = glm::mat4(1.0f);
+    glm::mat3 portalNormalMatrix = glm::mat3(1.0f);
+
+
     while(!glfwWindowShouldClose(window))
     {
         currentFrameTime = glfwGetTime();
@@ -87,31 +94,38 @@ void Application::StartApplication()
 
         camera->ProcessMouseMovement(currentMouseDelta.x, currentMouseDelta.y);
 
-        // TODO Implement GUI
-        // ImGui_ImplOpenGL3_NewFrame();
-        // ImGui_ImplGlfw_NewFrame();
-        // ImGui::NewFrame();
+        ApplyCameraMovements();
+
+        // TODO Implement real GUI
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
 
         // we "clear" the frame and z-buffer
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        portalModel.UseShader();
+        glm::mat4 projMatrix = camera->GetProjectionMatrix();
+        glm::mat4 viewMatrix = camera->GetViewMatrix();
 
-        // TODO implement model, shader & subroutine logic
-        // glUniformMatrix4fv(glGetUniformLocation(shader.Program, "projectionMatrix"), 1, GL_FALSE, glm::value_ptr(camera->GetProjectionMatrix()));
-        // glUniformMatrix4fv(glGetUniformLocation(shader.Program, "viewMatrix"), 1, GL_FALSE, glm::value_ptr(camera->GetViewMatrix()));
-        // portalModelMatrix = glm::mat4(1.0f);
-        // portalNormalMatrix = glm::mat3(1.0f);
-        // portalModelMatrix = glm::translate(portalModelMatrix, glm::vec3(-3.0f, 0.0f, 0.0f));
-        // portalModelMatrix = glm::rotate(portalModelMatrix, glm::radians(90.f), glm::vec3(1.0f, 0.0f, 0.0f));
-        // portalModelMatrix = glm::scale(portalModelMatrix, glm::vec3(0.8f, 0.8f, 0.8f));	// It's a bit too big for our scene, so scale it down
-        // // if we cast a mat4 to a mat3, we are automatically considering the upper left 3x3 submatrix
-        // portalNormalMatrix = glm::inverseTranspose(glm::mat3(camera->GetViewMatrix()*portalModelMatrix));
-        // glUniformMatrix4fv(glGetUniformLocation(shader.Program, "modelMatrix"), 1, GL_FALSE, glm::value_ptr(portalModelMatrix));
-        // glUniformMatrix3fv(glGetUniformLocation(shader.Program, "normalMatrix"), 1, GL_FALSE, glm::value_ptr(portalNormalMatrix));
-        //
-        // glUniform3f(glGetUniformLocation(shader.Program, "colorIn"), 0.5f, 0.5f, 0.5f);
-        //
-        // portalModel.Draw();
+        portalModel.SetShaderUniformParameter("projectionMatrix", &projMatrix);
+        portalModel.SetShaderUniformParameter("viewMatrix", &viewMatrix);
+
+        portalModelMatrix = glm::mat4(1.0f);
+        portalNormalMatrix = glm::mat3(1.0f);
+        portalModelMatrix = glm::translate(portalModelMatrix, glm::vec3(-3.0f, 0.0f, 0.0f));
+        portalModelMatrix = glm::rotate(portalModelMatrix, glm::radians(90.f), glm::vec3(1.0f, 0.0f, 0.0f));
+        portalModelMatrix = glm::scale(portalModelMatrix, glm::vec3(0.8f, 0.8f, 0.8f));	// It's a bit too big for our scene, so scale it down
+        // if we cast a mat4 to a mat3, we are automatically considering the upper left 3x3 submatrix
+        portalNormalMatrix = glm::inverseTranspose(glm::mat3(camera->GetViewMatrix()*portalModelMatrix));
+        portalModel.SetShaderUniformParameter("modelMatrix", &portalModelMatrix);
+        portalModel.SetShaderUniformParameter("normalMatrix", &portalNormalMatrix);
+
+        glm::vec3 color{.5f, .5f, .5f};
+
+        portalModel.SetShaderUniformParameter("colorIn", &color);
+
+        portalModel.Draw();
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

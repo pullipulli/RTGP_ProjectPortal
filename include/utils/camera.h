@@ -76,12 +76,13 @@ public:
         this->UpdateCameraVectors();
     }
 
-    Camera(glm::vec3 position, GLboolean onGround, float FOV, float aspectRatio, float nearPlaneZ, float farPlaneZ) : Camera(position, onGround)
+    Camera(glm::vec3 position, GLboolean onGround, float FOV, float aspectRatio, float nearPlaneZ, float farPlaneZ, float mouseSensitivity = SENSITIVITY) : Camera(position, onGround)
     {
         this->FOV = FOV;
         this->aspectRatio = aspectRatio;
         this->nearPlane = nearPlaneZ;
         this->farPlane = farPlaneZ;
+        this->MouseSensitivity = mouseSensitivity;
     }
 
     //////////////////////////////////////////
