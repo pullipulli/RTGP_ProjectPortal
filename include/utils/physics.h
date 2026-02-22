@@ -15,7 +15,7 @@ Universita' degli Studi di Milano
 
 #pragma once
 
-#include <bullet/btBulletDynamicsCommon.h>
+#include <btBulletDynamicsCommon.h>
 
 
 //enum to identify the 2 considered Collision Shapes

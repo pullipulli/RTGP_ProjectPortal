@@ -13,9 +13,11 @@
 #include <../glm/gtc/type_ptr.hpp>
 
 #include "Input.h"
+#include "BulletDynamics/Dynamics/btRigidBody.h"
 #include "gtc/matrix_inverse.hpp"
 #include "utils/camera.h"
 #include "utils/model.h"
+#include "utils/physics.h"
 
 #ifdef _WINDOWS_
     #error windows.h was included!
@@ -33,7 +35,9 @@
 Application::Application(float screenWidth, float screenHeight)
 : screenWidth(screenWidth), screenHeight(screenHeight)
 {
-    camera = new Camera(glm::vec3(0,0,7), GL_FALSE, 45.f, screenWidth/screenHeight, 0.1f, 100000.f);
+    this->camera = new Camera(glm::vec3(0,0,7), GL_FALSE, 45.f, screenWidth/screenHeight, 0.1f, 100000.f);
+    this->bulletSimulation = new Physics();
+    this->ambientColor = glm::vec3(1.f, 0.984f, 0.f);
 }
 
 void Application::StartApplication()
@@ -72,12 +76,28 @@ void Application::StartApplication()
     ImGui_ImplGlfw_InitForOpenGL(window, true);          // Second param install_callback=true will install GLFW callbacks and chain to existing ones.
     ImGui_ImplOpenGL3_Init();
 
-    Shader shader("shaders/vertex/00_basic.vert", "shaders/fragment/00_basic.frag");
-    Model portalModel("../assets/models/portal.obj", shader);
+    glm::vec3 plane_pos = glm::vec3(0.0f, -1.0f, 0.0f);
+    glm::vec3 plane_size = glm::vec3(200.0f, 0.1f, 200.0f);
+    glm::vec3 plane_rot = glm::vec3(0.0f, 0.0f, 0.0f);
+
+    btRigidBody* plane = bulletSimulation->createRigidBody(BOX,plane_pos,plane_size,plane_rot,0.0f,0.3f,0.3f);
+    glm::mat4 planeModelMatrix = glm::mat4(1.0f);
+    glm::mat3 planeNormalMatrix = glm::mat3(1.0f);
+
+    Shader globalShader("shaders/vertex/globalShader.vert", "shaders/fragment/globalShader.frag");
+
+    Model cubeModel("../assets/models/cube.obj", globalShader);     // I will use a scaled cube to simulate the static floor/plane
+    Model portalModel("../assets/models/portal.obj", globalShader);
     // Model and Normal transformation matrices for the objects in the scene: we set to identity
     glm::mat4 portalModelMatrix = glm::mat4(1.0f);
     glm::mat3 portalNormalMatrix = glm::mat3(1.0f);
 
+    glm::vec3 diffuseColor = glm::vec3(1, 0, 0);
+    glm::vec3 specularColor = glm::vec3(.2, .2, .2);
+    GLfloat Ka = .3;
+    GLfloat Kd = .5;
+    GLfloat Ks = .2;
+    GLfloat shininess = 1.f;
 
     while(!glfwWindowShouldClose(window))
     {
@@ -104,12 +124,44 @@ void Application::StartApplication()
         // we "clear" the frame and z-buffer
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        portalModel.UseShader();
+
+        bulletSimulation->dynamicsWorld->stepSimulation((deltaTime < this->FIXED_DELTA_TIME ? deltaTime : this->FIXED_DELTA_TIME), 10);
         glm::mat4 projMatrix = camera->GetProjectionMatrix();
         glm::mat4 viewMatrix = camera->GetViewMatrix();
 
+        cubeModel.UseShader();
+
+        planeModelMatrix = glm::mat4(1.0f);
+        planeNormalMatrix = glm::mat3(1.0f);
+        planeModelMatrix = glm::translate(planeModelMatrix, plane_pos);
+        planeModelMatrix = glm::scale(planeModelMatrix, plane_size);
+        planeNormalMatrix = glm::inverseTranspose(glm::mat3(viewMatrix*planeModelMatrix));
+
+        // "global" uniforms, equal for all the objects in the "scene"
+        cubeModel.SetShaderUniformParameter("projectionMatrix", &projMatrix);
+        cubeModel.SetShaderUniformParameter("viewMatrix", &viewMatrix);
+        cubeModel.SetShaderUniformParameter("pointLightPosition", &lightPos0);
+        cubeModel.SetShaderUniformParameter("ambientColor", &ambientColor);
+
+
+        // "local" uniforms; they depend on the single object
+        cubeModel.SetShaderUniformParameter("modelMatrix", &planeModelMatrix);
+        cubeModel.SetShaderUniformParameter("normalMatrix", &planeNormalMatrix);
+        cubeModel.SetShaderUniformParameter("diffuseColor", &diffuseColor);
+        cubeModel.SetShaderUniformParameter("specularColor", &specularColor);
+        cubeModel.SetShaderUniformParameter("Ka", Ka);
+        cubeModel.SetShaderUniformParameter("Kd", Kd);
+        cubeModel.SetShaderUniformParameter("Ks", Ks);
+        cubeModel.SetShaderUniformParameter("shininess", shininess);
+
+        cubeModel.Draw();
+
+        portalModel.UseShader();
+
         portalModel.SetShaderUniformParameter("projectionMatrix", &projMatrix);
         portalModel.SetShaderUniformParameter("viewMatrix", &viewMatrix);
+        portalModel.SetShaderUniformParameter("pointLightPosition", &lightPos0);
+        portalModel.SetShaderUniformParameter("ambientColor", &ambientColor);
 
         portalModelMatrix = glm::mat4(1.0f);
         portalNormalMatrix = glm::mat3(1.0f);
@@ -120,10 +172,12 @@ void Application::StartApplication()
         portalNormalMatrix = glm::inverseTranspose(glm::mat3(camera->GetViewMatrix()*portalModelMatrix));
         portalModel.SetShaderUniformParameter("modelMatrix", &portalModelMatrix);
         portalModel.SetShaderUniformParameter("normalMatrix", &portalNormalMatrix);
-
-        glm::vec3 color{.5f, .5f, .5f};
-
-        portalModel.SetShaderUniformParameter("colorIn", &color);
+        portalModel.SetShaderUniformParameter("diffuseColor", &diffuseColor);
+        portalModel.SetShaderUniformParameter("specularColor", &specularColor);
+        portalModel.SetShaderUniformParameter("Ka", Ka);
+        portalModel.SetShaderUniformParameter("Kd", Kd);
+        portalModel.SetShaderUniformParameter("Ks", Ks);
+        portalModel.SetShaderUniformParameter("shininess", shininess);
 
         portalModel.Draw();
 
@@ -137,6 +191,7 @@ void Application::StartApplication()
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
+    bulletSimulation->Clear();
 
     glfwTerminate();
 }

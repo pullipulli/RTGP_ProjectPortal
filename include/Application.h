@@ -3,13 +3,17 @@
 //
 
 #pragma once
+#include "vec3.hpp"
 
 class Camera;
 class Input;
+class Physics;
+typedef float GLfloat;
 
 class Application
 {
 public:
+    const float FIXED_DELTA_TIME = 1/60.f;
     Application(float screenWidth, float screenHeight);
     void StartApplication();
 private:
@@ -21,7 +25,13 @@ private:
     float currentFrameTime = 0;
 
     Camera *camera;
+    Physics *bulletSimulation;
 
     void ApplyCameraMovements();
     Input *input;
+
+    // Blinn-Phong equation parameters
+    glm::vec3 ambientColor;
+
+    glm::vec3 lightPos0 = glm::vec3(5.0f, 10.0f, 10.0f);
 };
