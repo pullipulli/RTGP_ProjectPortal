@@ -13,6 +13,7 @@
 #include <../glm/gtc/type_ptr.hpp>
 
 #include "Input.h"
+#include "RenderTexture.h"
 #include "BulletDynamics/Dynamics/btRigidBody.h"
 #include "gtc/matrix_inverse.hpp"
 #include "utils/camera.h"
@@ -37,7 +38,7 @@ Application::Application(float screenWidth, float screenHeight)
 {
     this->camera = new Camera(glm::vec3(0,0,7), GL_FALSE, 45.f, screenWidth/screenHeight, 0.1f, 100000.f);
     this->bulletSimulation = new Physics();
-    this->ambientColor = glm::vec3(1.f, 0.984f, 0.f);
+    this->ambientColor = glm::vec3(1.f, 1, 1.f);
 }
 
 void Application::StartApplication()
@@ -47,6 +48,7 @@ void Application::StartApplication()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
     GLFWwindow* window = glfwCreateWindow(screenWidth, screenHeight, "Portal Project", nullptr, nullptr);
     if (!window)
@@ -84,6 +86,12 @@ void Application::StartApplication()
     glm::mat4 planeModelMatrix = glm::mat4(1.0f);
     glm::mat3 planeNormalMatrix = glm::mat3(1.0f);
 
+    glm::mat4 quadRenderTextureModelMatrix = glm::mat4(1.f);
+    glm::mat3 quadRenderTextureNormalMatrix = glm::mat4(1.f);
+    glm::vec3 quadRtPosition = glm::vec3(0, 1, 0);
+    glm::vec3 quadRtSize = glm::vec3(100);
+    glm::vec3 quadRtRotation = glm::vec3(0);
+
     Shader globalShader("shaders/vertex/globalShader.vert", "shaders/fragment/globalShader.frag");
 
     Model cubeModel("../assets/models/cube.obj", globalShader);     // I will use a scaled cube to simulate the static floor/plane
@@ -98,6 +106,8 @@ void Application::StartApplication()
     GLfloat Kd = .5;
     GLfloat Ks = .2;
     GLfloat shininess = 1.f;
+
+    RenderTexture renderTexture{};
 
     while(!glfwWindowShouldClose(window))
     {
@@ -128,6 +138,18 @@ void Application::StartApplication()
         bulletSimulation->dynamicsWorld->stepSimulation((deltaTime < this->FIXED_DELTA_TIME ? deltaTime : this->FIXED_DELTA_TIME), 10);
         glm::mat4 projMatrix = camera->GetProjectionMatrix();
         glm::mat4 viewMatrix = camera->GetViewMatrix();
+
+        quadRenderTextureModelMatrix = glm::mat4(1.f);
+        quadRenderTextureNormalMatrix = glm::mat4(1.f);
+        quadRenderTextureModelMatrix = glm::translate(quadRenderTextureModelMatrix, quadRtPosition);
+        quadRenderTextureModelMatrix = glm::scale(quadRenderTextureModelMatrix, quadRtSize);
+        quadRenderTextureNormalMatrix = glm::inverseTranspose(glm::mat3(viewMatrix*quadRenderTextureModelMatrix));
+
+        renderTexture.SetupMVPMatrices(&projMatrix, &viewMatrix,  &quadRenderTextureModelMatrix, &quadRenderTextureNormalMatrix);
+        renderTexture.SetupBlinnPhongShader(&lightPos0, new glm::vec3(1,1,1),
+            new glm::vec3(1, 1, 1), new glm::vec3(1, 1, 1), .1f, .8f, .1f, 1.f);
+
+        renderTexture.Draw();
 
         cubeModel.UseShader();
 

@@ -33,5 +33,5 @@ private:
     // Blinn-Phong equation parameters
     glm::vec3 ambientColor;
 
-    glm::vec3 lightPos0 = glm::vec3(5.0f, 10.0f, 10.0f);
+    glm::vec3 lightPos0 = glm::vec3(-5.0f, 5.0f, 1.0f);
 };

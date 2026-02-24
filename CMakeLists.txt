@@ -64,6 +64,8 @@ set(IMGUI_BACKENDS
 add_executable(RTGPProject_Portal src/main.cpp include ${IMGUI_SOURCES} ${IMGUI_BACKENDS}
         src/Input.cpp
         src/Application.cpp
+        src/RenderTexture.cpp
+        include/RenderTexture.h
 )
 
 target_include_directories(RTGPProject_Portal PUBLIC
