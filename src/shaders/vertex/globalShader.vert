@@ -16,6 +16,7 @@ Universita' degli Studi di Milano
 layout (location = 0) in vec3 position;
 // vertex normal in world coordinate
 layout (location = 1) in vec3 normal;
+layout (location = 2) in vec2 uvCoordinates;
 
 // model matrix
 uniform mat4 modelMatrix;
@@ -31,6 +32,7 @@ out vec3 lightDir;
 
 out vec3 vertexNormal;
 out vec3 vertexViewPosition;
+out vec2 TexCoordinates;
 
 void main()
 {
@@ -44,4 +46,6 @@ void main()
     lightDir = lightPos.xyz - modelViewPosition.xyz;
 
     gl_Position = projectionMatrix * modelViewPosition;
+
+    TexCoordinates = uvCoordinates;
 }

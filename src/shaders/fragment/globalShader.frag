@@ -23,6 +23,8 @@ in vec3 vertexNormal;
 // vector from fragment to camera (in view coordinate)
 in vec3 vertexViewPosition;
 
+in vec2 TexCoordinates;
+
 uniform vec3 ambientColor;
 uniform vec3 diffuseColor;
 uniform vec3 specularColor;
@@ -34,6 +36,9 @@ uniform float Kd;
 uniform float Ks;
 
 uniform float shininess;
+
+uniform sampler2D ourTexture;
+uniform bool hasTexture;
 
 // blinnPhong equation
 void main()
@@ -70,4 +75,8 @@ void main()
         Ks * specular * specularColor);
     }
     colorFrag = vec4(color,1.0);
+    if (hasTexture)
+    {
+        colorFrag *= texture(ourTexture, TexCoordinates);
+    }
 }
