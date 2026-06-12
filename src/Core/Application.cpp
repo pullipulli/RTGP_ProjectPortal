@@ -2,20 +2,20 @@
 // Created by Andrea Pullia on 17/02/2026.
 //
 
-#include "Application.h"
+#include "Core/Application.h"
 
 #ifdef _WIN32
     #define APIENTRY __stdcall
 #endif
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <../glm/gtc/matrix_transform.hpp>
-#include <../glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
-#include "Input.h"
-#include "RenderTexture.h"
+#include "Core/Input.h"
+#include "Core/RenderTexture.h"
 #include "BulletDynamics/Dynamics/btRigidBody.h"
-#include "gtc/matrix_inverse.hpp"
+#include "glm/gtc/matrix_inverse.hpp"
 #include "utils/camera.h"
 #include "utils/model.h"
 #include "utils/physics.h"

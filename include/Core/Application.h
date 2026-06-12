@@ -3,7 +3,7 @@
 //
 
 #pragma once
-#include "vec3.hpp"
+#include "glm/vec3.hpp"
 #include "RenderTexture.h"
 
 class Camera;

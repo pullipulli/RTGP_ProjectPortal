@@ -16,8 +16,8 @@ Universita' degli Studi di Milano
 
 // we use GLM to create the view matrix and to manage camera transformations
 #include <glad/glad.h>
-#include <../glm/glm.hpp>
-#include <../glm/gtc/matrix_transform.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 // possible camera movements
 enum Camera_Movement {

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.24)
 project(RTGPProject_Portal)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(BUILD_CPU_DEMOS OFF CACHE BOOL "" FORCE)
@@ -61,15 +61,15 @@ set(IMGUI_BACKENDS
         ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
 )
 
-add_executable(RTGPProject_Portal src/main.cpp include ${IMGUI_SOURCES} ${IMGUI_BACKENDS}
-        src/Input.cpp
-        src/Application.cpp
-        src/RenderTexture.cpp
-        include/RenderTexture.h
+add_executable(RTGPProject_Portal
+        src/Core/main.cpp include ${IMGUI_SOURCES} ${IMGUI_BACKENDS}
+        src/Core/Input.cpp
+        src/Core/Application.cpp
+        src/Core/RenderTexture.cpp
 )
 
 target_include_directories(RTGPProject_Portal PUBLIC
-        libs/glm
+        libs
         libs/stb_image
         libs/glad/include
         libs/glfw/include
@@ -78,7 +78,6 @@ target_include_directories(RTGPProject_Portal PUBLIC
         ${ASSIMP_ROOT}/include
         libs/bullet/src
         include
-        src
 )
 
 target_link_libraries(RTGPProject_Portal

@@ -2,10 +2,10 @@
 // Created by Andrea Pullia on 17/02/2026.
 //
 
-#include "Input.h"
+#include "Core/Input.h"
 
 #include "GLFW/glfw3.h"
-#include "glm.hpp"
+#include "glm/glm.hpp"
 
 Input::Input(GLFWwindow *currentWindow, bool shouldCloseWindowOnEsc)
 : window(currentWindow), shouldCloseWindowOnEsc(shouldCloseWindowOnEsc)

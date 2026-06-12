@@ -23,7 +23,7 @@ Universita' degli Studi di Milano
 #pragma once
 
 // we use GLM data structures to convert data in the Assimp data structures in a data structures suited for VBO, VAO and EBO buffers
-#include <glm.hpp>
+#include <glm/glm.hpp>
 
 // Assimp includes
 #include <assimp/Importer.hpp>

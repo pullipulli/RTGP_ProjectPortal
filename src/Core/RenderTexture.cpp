@@ -3,11 +3,11 @@
 // Created following this guide https://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/
 //
 
-#include "../include/RenderTexture.h"
+#include "Core/RenderTexture.h"
 
 #include <glad/glad.h>
 #include "utils/shader.h"
-#include <../glm/glm.hpp>
+#include <glm/glm.hpp>
 #include <cassert>
 
 RenderTexture::RenderTexture(GLint width, GLint height)
