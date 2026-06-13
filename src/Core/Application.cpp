@@ -15,6 +15,7 @@
 #include "Core/Input.h"
 #include "Core/RenderTexture.h"
 #include "BulletDynamics/Dynamics/btRigidBody.h"
+#include "Core/ResourceManager.h"
 #include "glm/gtc/matrix_inverse.hpp"
 #include "utils/camera.h"
 #include "utils/model.h"
@@ -88,6 +89,8 @@ void Application::StartApplication()
 
     cubeModel = new Model("../assets/models/cube.obj", *globalShader);     // I will use a scaled cube to simulate the static floor/plane
     portalModel = new Model("../assets/models/portal.obj", *globalShader);
+
+    ResourceManager::GetInstance();
 
     while(!glfwWindowShouldClose(window))
     {
