@@ -208,7 +208,7 @@ void Application::DrawScene(RenderPass renderPass)
 
     if (renderPass == RenderPass::Screen)
     {
-        renderTexture->BindFrameBufferTexture();
+        renderTexture->BindTexture();
         portalModel->UseShader();
 
         portalModel->SetShaderUniformParameter("projectionMatrix", &projMatrix);

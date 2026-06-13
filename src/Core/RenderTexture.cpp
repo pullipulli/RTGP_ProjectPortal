@@ -19,16 +19,9 @@ RenderTexture::RenderTexture(GLint width, GLint height)
     glGenFramebuffers(1, &rtFrameBufferId);
     glBindFramebuffer(GL_FRAMEBUFFER, rtFrameBufferId);
 
-    // setup of the dynamic texture
-    glGenTextures(1, &renderedTextureId);
-    glBindTexture(GL_TEXTURE_2D, renderedTextureId);
-
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderedTextureId,0 );
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureId, 0);
 
     // setup for the depth buffer
     glGenRenderbuffers(1, &depthBufferId);
@@ -39,22 +32,19 @@ RenderTexture::RenderTexture(GLint width, GLint height)
     GLenum drawBuffers[1] = {GL_COLOR_ATTACHMENT0};
     glDrawBuffers(1, drawBuffers);
 
-    assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE && "Render Texture Framebuffer Initialization failed");
+    assert(
+        glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE &&
+        "Render Texture Framebuffer Initialization failed"
+    );
 }
 
-void RenderTexture::BindFrameBuffer()
+void RenderTexture::BindFrameBuffer() const
 {
     // draws the current  camera view to buffer
     glBindFramebuffer(GL_FRAMEBUFFER, rtFrameBufferId);
     glClearColor(1, 0, 0, 1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glViewport(0, 0, width, height);
-}
-
-void RenderTexture::BindFrameBufferTexture()
-{
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, renderedTextureId);
 }
 
 

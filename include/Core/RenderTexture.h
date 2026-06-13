@@ -3,24 +3,19 @@
 //
 
 #pragma once
+#include "Texture.h"
 
 typedef unsigned int GLuint;
 typedef float GLfloat;
 typedef int GLint;
 
-class RenderTexture
+class RenderTexture : public Texture
 {
 public:
     RenderTexture(GLint width, GLint height);
-    void BindFrameBuffer();
-    void BindFrameBufferTexture();
-
+    void BindFrameBuffer() const;
 private:
-    GLint width;
-    GLint height;
-
     GLuint rtFrameBufferId;
-    GLuint renderedTextureId;
     GLuint depthBufferId;
 };
 
