@@ -21,6 +21,7 @@ Universita' degli Studi di Milano
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glad/glad.h>
 
 using namespace std;
 
@@ -129,42 +130,42 @@ public:
     	glUniform1i(uniformLocation, value);
     }
 
-	void SetUniformParameter(std::string parameterName, glm::vec2* value)
+	void SetUniformParameter(std::string parameterName, const glm::vec2* value)
     {
     	GLint uniformLocation = glGetUniformLocation(Program, parameterName.c_str());
 
     	glUniform2fv(uniformLocation, 1, glm::value_ptr(*value));
     }
 
-	void SetUniformParameter(std::string parameterName, glm::vec3* value)
+	void SetUniformParameter(std::string parameterName, const glm::vec3* value)
     {
     	GLint uniformLocation = glGetUniformLocation(Program, parameterName.c_str());
 
     	glUniform3fv(uniformLocation, 1, glm::value_ptr(*value));
     }
 
-	void SetUniformParameter(std::string parameterName, glm::vec4* value)
+	void SetUniformParameter(std::string parameterName, const glm::vec4* value)
     {
     	GLint uniformLocation = glGetUniformLocation(Program, parameterName.c_str());
 
     	glUniform4fv(uniformLocation, 1, glm::value_ptr(*value));
     }
 
-	void SetUniformParameter(std::string parameterName, glm::mat2* value)
+	void SetUniformParameter(std::string parameterName, const glm::mat2* value)
     {
     	GLint uniformLocation = glGetUniformLocation(Program, parameterName.c_str());
 
     	glUniformMatrix2fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(*value));
     }
 
-	void SetUniformParameter(std::string parameterName, glm::mat3* value)
+	void SetUniformParameter(std::string parameterName, const glm::mat3* value)
     {
     	GLint uniformLocation = glGetUniformLocation(Program, parameterName.c_str());
 
     	glUniformMatrix3fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(*value));
     }
 
-	void SetUniformParameter(std::string parameterName, glm::mat4* value)
+	void SetUniformParameter(std::string parameterName, const glm::mat4* value)
     {
     	GLint uniformLocation = glGetUniformLocation(Program, parameterName.c_str());
 

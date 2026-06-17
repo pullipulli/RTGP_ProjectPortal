@@ -15,6 +15,7 @@
 #include "Core/Input.h"
 #include "Core/RenderTexture.h"
 #include "BulletDynamics/Dynamics/btRigidBody.h"
+#include "Core/Material.h"
 #include "Core/ResourceManager.h"
 #include "glm/gtc/matrix_inverse.hpp"
 #include "utils/camera.h"
@@ -85,12 +86,14 @@ void Application::StartApplication()
     ResourceManager* resourceManager = ResourceManager::GetInstance();
     renderTexture = resourceManager->InitializeRenderTexture("PortalTexture", 512, 256);
 
-    globalShader = resourceManager->InitializeShader("GlobalShader",
+    Shader* globalShader = resourceManager->InitializeShader("GlobalShader",
         "shaders/vertex/globalShader.vert", "shaders/fragment/globalShader.frag"
     );
 
     cubeModel = resourceManager->InitializeModel("../assets/models/cube.obj", globalShader);     // I will use a scaled cube to simulate the static floor/plane
     portalModel = resourceManager->InitializeModel("../assets/models/portal.obj", globalShader);
+
+    // TODO need a way to identify materials portalMaterial = &Material::Create(globalShader);
 
     while(!glfwWindowShouldClose(window))
     {

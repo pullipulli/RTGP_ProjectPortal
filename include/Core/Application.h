@@ -11,6 +11,7 @@ class Input;
 class Physics;
 class Model;
 class Shader;
+class Material;
 
 typedef float GLfloat;
 
@@ -45,5 +46,6 @@ private:
     Model* cubeModel;
     Model* portalModel;
 
-    Shader* globalShader;
+    Material* planeMaterial;
+    Material* portalMaterial;
 };
