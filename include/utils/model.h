@@ -74,6 +74,7 @@ public:
     Model(const string& path, Shader& shader) : appliedShader(shader)
     {
         this->loadModel(path);
+        this->modelId = path;
     }
 
     void UseShader()
@@ -141,11 +142,17 @@ public:
             this->meshes[i].Draw();
     }
 
+    const std::string& GetModelId() const
+    {
+        return modelId;
+    }
+
     //////////////////////////////////////////
 
 
 private:
     Shader appliedShader;
+    std::string modelId;
 
     //////////////////////////////////////////
     // loading of the model using Assimp library. Nodes are processed to build a vector of Mesh class instances

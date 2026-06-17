@@ -34,7 +34,7 @@ Model* ResourceManager::InitializeModel(const std::string& pathKey, Shader* init
 
 Shader* ResourceManager::InitializeShader(const std::string& shaderNameKey, const std::string& vertexPath, const std::string& fragmentShader)
 {
-    auto [pair, inserted] = shaders.try_emplace(shaderNameKey, vertexPath.c_str(), fragmentShader.c_str());
+    auto [pair, inserted] = shaders.try_emplace(shaderNameKey, shaderNameKey, vertexPath.c_str(), fragmentShader.c_str());
 
     return &pair->second;
 }
@@ -50,7 +50,7 @@ Texture* ResourceManager::InitializeTexture(const std::string& pathKey, GLint Te
 
 RenderTexture* ResourceManager::InitializeRenderTexture(const std::string& key, GLint width, GLint height)
 {
-    auto [pair, inserted] = renderTextures.try_emplace(key, width, height);
+    auto [pair, inserted] = renderTextures.try_emplace(key, width, height, key);
 
     return &pair->second;
 }

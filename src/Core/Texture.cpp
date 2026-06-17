@@ -34,6 +34,8 @@ Texture::Texture(const std::string* path, GLint TextureWrapMode, GLint Minifying
     }
 
     stbi_image_free(textureData);
+
+    textureResourceId = *path;
 }
 
 int Texture::GetWidth() const
@@ -54,6 +56,11 @@ void Texture::BindTexture() const
 {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, textureId);
+}
+
+const std::string & Texture::GetTextureResourceId() const
+{
+    return textureResourceId;
 }
 
 Texture::Texture() : Texture(nullptr, GL_REPEAT, GL_LINEAR, GL_LINEAR, false)

@@ -12,7 +12,7 @@ typedef int GLint;
 class RenderTexture : public Texture
 {
 public:
-    RenderTexture(GLint width, GLint height);
+    RenderTexture(GLint width, GLint height, const std::string& renderTextureResourceId);
     void BindFrameBuffer() const;
 private:
     GLuint rtFrameBufferId;

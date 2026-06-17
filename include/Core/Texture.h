@@ -21,13 +21,14 @@ public:
     int GetNumberOfChannels() const;
 
     virtual void BindTexture() const;
-
+    const std::string& GetTextureResourceId() const;
 protected:
     int width;
     int height;
     int channels;
 
     GLuint textureId;
+    std::string textureResourceId;
 
     Texture();
 };

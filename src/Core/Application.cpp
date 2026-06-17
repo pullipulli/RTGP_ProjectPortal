@@ -93,7 +93,22 @@ void Application::StartApplication()
     cubeModel = resourceManager->InitializeModel("../assets/models/cube.obj", globalShader);     // I will use a scaled cube to simulate the static floor/plane
     portalModel = resourceManager->InitializeModel("../assets/models/portal.obj", globalShader);
 
-    // TODO need a way to identify materials portalMaterial = &Material::Create(globalShader);
+    planeMaterial = &Material::Create(globalShader->GetShaderId())
+                        .AddDiffuse(glm::vec3(0, 1, 0))
+                        .AddSpecular(glm::vec3(0, 0, 0))
+                        .AddShininess(1.f)
+                        .AddKa(.05f)
+                        .AddKs(0.f)
+                        .AddKd(.9f);
+
+    portalMaterial = &Material::Create(globalShader->GetShaderId())
+                    .AddDiffuse(glm::vec3(0, 1, 0))
+                    .AddSpecular(glm::vec3(0, 0, 0))
+                    .AddShininess(1.f)
+                    .AddKa(.05f)
+                    .AddKs(0.f)
+                    .AddKd(.9f)
+                    .AddTexture(renderTexture->GetTextureResourceId());
 
     while(!glfwWindowShouldClose(window))
     {
@@ -175,16 +190,8 @@ void Application::DrawScene(RenderPass renderPass)
     glm::mat4 portalModelMatrix = glm::mat4(1.0f);
     glm::mat3 portalNormalMatrix = glm::mat3(1.0f);
 
-    glm::vec3 diffuseColor = glm::vec3(0, 1, 0);
-    glm::vec3 specularColor = glm::vec3(0, 0, 0);
-    GLfloat Ka = .05f;
-    GLfloat Kd = .9;
-    GLfloat Ks = .0f;
-    GLfloat shininess = 1.f;
     glm::mat4 projMatrix = camera->GetProjectionMatrix();
     glm::mat4 viewMatrix = camera->GetViewMatrix();
-
-    cubeModel->UseShader();
 
     planeModelMatrix = glm::mat4(1.0f);
     planeNormalMatrix = glm::mat3(1.0f);
@@ -202,20 +209,13 @@ void Application::DrawScene(RenderPass renderPass)
     // "local" uniforms; they depend on the single object
     cubeModel->SetShaderUniformParameter("modelMatrix", &planeModelMatrix);
     cubeModel->SetShaderUniformParameter("normalMatrix", &planeNormalMatrix);
-    cubeModel->SetShaderUniformParameter("diffuseColor", &diffuseColor);
-    cubeModel->SetShaderUniformParameter("specularColor", &specularColor);
-    cubeModel->SetShaderUniformParameter("Ka", Ka);
-    cubeModel->SetShaderUniformParameter("Kd", Kd);
-    cubeModel->SetShaderUniformParameter("Ks", Ks);
-    cubeModel->SetShaderUniformParameter("shininess", shininess);
-    cubeModel->SetShaderUniformParameter("hasTexture", false);
+    planeMaterial->Use();
 
     cubeModel->Draw();
 
     if (renderPass == RenderPass::Screen)
     {
         renderTexture->BindTexture();
-        portalModel->UseShader();
 
         portalModel->SetShaderUniformParameter("projectionMatrix", &projMatrix);
         portalModel->SetShaderUniformParameter("viewMatrix", &viewMatrix);
@@ -231,14 +231,7 @@ void Application::DrawScene(RenderPass renderPass)
         portalNormalMatrix = glm::inverseTranspose(glm::mat3(camera->GetViewMatrix()*portalModelMatrix));
         portalModel->SetShaderUniformParameter("modelMatrix", &portalModelMatrix);
         portalModel->SetShaderUniformParameter("normalMatrix", &portalNormalMatrix);
-        portalModel->SetShaderUniformParameter("diffuseColor", &diffuseColor);
-        portalModel->SetShaderUniformParameter("specularColor", &specularColor);
-        portalModel->SetShaderUniformParameter("Ka", Ka);
-        portalModel->SetShaderUniformParameter("Kd", Kd);
-        portalModel->SetShaderUniformParameter("Ks", Ks);
-        portalModel->SetShaderUniformParameter("shininess", shininess);
-        portalModel->SetShaderUniformParameter("hasTexture", true);
-
+        portalMaterial->Use();
         portalModel->Draw();
     }
     glActiveTexture(GL_TEXTURE0);

@@ -30,12 +30,18 @@ using namespace std;
 class Shader
 {
 public:
+
     GLuint Program;
+
+	const std::string& GetShaderId() const
+	{
+		return shaderId;
+	}
 
     //////////////////////////////////////////
 
     //constructor
-    Shader(const GLchar* vertexPath, const GLchar* fragmentPath)
+    Shader(const std::string& shaderId, const GLchar* vertexPath, const GLchar* fragmentPath)
     {
         // Step 1: we retrieve shaders source code from provided filepaths
         string vertexCode;
@@ -95,6 +101,8 @@ public:
         glLinkProgram(this->Program);
         // check linking errors
         checkCompileErrors(this->Program, "PROGRAM");
+
+		this->shaderId = shaderId;
 
         // Step 4: we delete the shaders because they are linked to the Shader Program, and we do not need them anymore
         glDeleteShader(vertex);
@@ -174,6 +182,8 @@ public:
 
 private:
     //////////////////////////////////////////
+
+	std::string shaderId;
 
     // Check compilation and linking errors
     void checkCompileErrors(GLuint shader, string type)

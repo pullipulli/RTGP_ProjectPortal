@@ -1,6 +1,6 @@
 //
 // Created by Andrea Pullia on 24/02/2026.
-// Created following this guide https://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/
+// Created starting from this guide https://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/
 //
 
 #include "Core/RenderTexture.h"
@@ -10,7 +10,7 @@
 #include <glm/glm.hpp>
 #include <cassert>
 
-RenderTexture::RenderTexture(GLint width, GLint height)
+RenderTexture::RenderTexture(GLint width, GLint height, const std::string& renderTextureResourceId)
 {
     this->width = width;
     this->height = height;
@@ -36,6 +36,8 @@ RenderTexture::RenderTexture(GLint width, GLint height)
         glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE &&
         "Render Texture Framebuffer Initialization failed"
     );
+
+    this->textureResourceId = renderTextureResourceId;
 }
 
 void RenderTexture::BindFrameBuffer() const
