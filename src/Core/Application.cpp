@@ -71,26 +71,26 @@ void Application::StartApplication()
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
     // Setup Platform/Renderer backends
-    ImGui_ImplGlfw_InitForOpenGL(window, true);          // Second param install_callback=true will install GLFW callbacks and chain to existing ones.
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init();
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
     glEnable(GL_CULL_FACE);
+    ResourceManager* resourceManager = ResourceManager::GetInstance();
+    renderTexture = resourceManager->InitializeRenderTexture("PortalTexture", 512, 256);
 
-    renderTexture = new RenderTexture{512, 256};
+    globalShader = resourceManager->InitializeShader("GlobalShader",
+        "shaders/vertex/globalShader.vert", "shaders/fragment/globalShader.frag"
+    );
 
-    globalShader = new Shader("shaders/vertex/globalShader.vert", "shaders/fragment/globalShader.frag");
-
-    cubeModel = new Model("../assets/models/cube.obj", *globalShader);     // I will use a scaled cube to simulate the static floor/plane
-    portalModel = new Model("../assets/models/portal.obj", *globalShader);
-
-    ResourceManager::GetInstance();
+    cubeModel = resourceManager->InitializeModel("../assets/models/cube.obj", globalShader);     // I will use a scaled cube to simulate the static floor/plane
+    portalModel = resourceManager->InitializeModel("../assets/models/portal.obj", globalShader);
 
     while(!glfwWindowShouldClose(window))
     {

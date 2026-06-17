@@ -71,7 +71,7 @@ public:
     // to notice that Model class is not strictly following the Rules of 5
     // https://en.cppreference.com/w/cpp/language/rule_of_three
     // because we are not writing a user-defined destructor.
-    Model(const string& path, Shader shader) : appliedShader(shader)
+    Model(const string& path, Shader& shader) : appliedShader(shader)
     {
         this->loadModel(path);
     }
