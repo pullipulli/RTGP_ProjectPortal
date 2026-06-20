@@ -69,6 +69,7 @@ add_executable(RTGPProject_Portal
         src/Core/Texture.cpp
         src/Core/ResourceManager.cpp
         src/Core/Material.cpp
+        src/Core/SceneObject.cpp
 )
 
 target_include_directories(RTGPProject_Portal PUBLIC

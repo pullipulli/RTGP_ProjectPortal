@@ -17,6 +17,7 @@
 #include "BulletDynamics/Dynamics/btRigidBody.h"
 #include "Core/Material.h"
 #include "Core/ResourceManager.h"
+#include "Core/SceneObject.h"
 #include "glm/gtc/matrix_inverse.hpp"
 #include "utils/camera.h"
 #include "utils/model.h"
@@ -110,6 +111,29 @@ void Application::StartApplication()
                     .AddKd(.9f)
                     .AddTexture(renderTexture->GetTextureResourceId());
 
+    SceneObject portalObject{
+        glm::vec3(-3, 1, 0),
+        glm::vec3(90, 0, 0),
+        glm::vec3(.8f),
+        portalMaterial,
+        portalModel->GetModelId()
+    };
+
+    SceneObject planeObject{
+        glm::vec3(0, -1, 0),
+        glm::vec3(0),
+        glm::vec3(200, 0.1f, 200),
+        planeMaterial,
+        cubeModel->GetModelId()
+    };
+
+    //btRigidBody* plane = bulletSimulation->createRigidBody(BOX,plane_pos,plane_size,plane_rot,0.0f,0.3f,0.3f);
+
+    for (SceneObject* object : SceneObject::GetAllActiveSceneObjects())
+    {
+        object->Start();
+    }
+
     while(!glfwWindowShouldClose(window))
     {
         currentFrameTime = glfwGetTime();
@@ -178,61 +202,17 @@ void Application::ApplyCameraMovements()
 
 void Application::DrawScene(RenderPass renderPass)
 {
-    glm::vec3 plane_pos = glm::vec3(0.0f, -1.0f, 0.0f);
-    glm::vec3 plane_size = glm::vec3(200.0f, 0.1f, 200.0f);
-    glm::vec3 plane_rot = glm::vec3(0.0f, 0.0f, 0.0f);
-
-    btRigidBody* plane = bulletSimulation->createRigidBody(BOX,plane_pos,plane_size,plane_rot,0.0f,0.3f,0.3f);
-    glm::mat4 planeModelMatrix = glm::mat4(1.0f);
-    glm::mat3 planeNormalMatrix = glm::mat3(1.0f);
-
-    // Model and Normal transformation matrices for the objects in the scene: we set to identity
-    glm::mat4 portalModelMatrix = glm::mat4(1.0f);
-    glm::mat3 portalNormalMatrix = glm::mat3(1.0f);
-
-    glm::mat4 projMatrix = camera->GetProjectionMatrix();
-    glm::mat4 viewMatrix = camera->GetViewMatrix();
-
-    planeModelMatrix = glm::mat4(1.0f);
-    planeNormalMatrix = glm::mat3(1.0f);
-    planeModelMatrix = glm::translate(planeModelMatrix, plane_pos);
-    planeModelMatrix = glm::scale(planeModelMatrix, plane_size);
-    planeNormalMatrix = glm::inverseTranspose(glm::mat3(viewMatrix*planeModelMatrix));
-
-    // "global" uniforms, equal for all the objects in the "scene"
-    cubeModel->SetShaderUniformParameter("projectionMatrix", &projMatrix);
-    cubeModel->SetShaderUniformParameter("viewMatrix", &viewMatrix);
-    cubeModel->SetShaderUniformParameter("pointLightPosition", &lightPos0);
-    cubeModel->SetShaderUniformParameter("ambientColor", &ambientColor);
-
-
-    // "local" uniforms; they depend on the single object
-    cubeModel->SetShaderUniformParameter("modelMatrix", &planeModelMatrix);
-    cubeModel->SetShaderUniformParameter("normalMatrix", &planeNormalMatrix);
-    planeMaterial->Use();
-
-    cubeModel->Draw();
+    for (SceneObject* object : SceneObject::GetAllActiveSceneObjects())
+    {
+        object->Render(camera->GetViewMatrix(), camera->GetProjectionMatrix(), renderPass);
+    }
 
     if (renderPass == RenderPass::Screen)
     {
-        renderTexture->BindTexture();
-
-        portalModel->SetShaderUniformParameter("projectionMatrix", &projMatrix);
-        portalModel->SetShaderUniformParameter("viewMatrix", &viewMatrix);
-        portalModel->SetShaderUniformParameter("pointLightPosition", &lightPos0);
-        portalModel->SetShaderUniformParameter("ambientColor", &ambientColor);
-
-        portalModelMatrix = glm::mat4(1.0f);
-        portalNormalMatrix = glm::mat3(1.0f);
-        portalModelMatrix = glm::translate(portalModelMatrix, glm::vec3(-3.0f, 1.0f, 0.0f));
-        portalModelMatrix = glm::rotate(portalModelMatrix, glm::radians(90.f), glm::vec3(1.0f, 0.0f, 0.0f));
-        portalModelMatrix = glm::scale(portalModelMatrix, glm::vec3(0.8f, 0.8f, 0.8f));	// It's a bit too big for our scene, so scale it down
-        // if we cast a mat4 to a mat3, we are automatically considering the upper left 3x3 submatrix
-        portalNormalMatrix = glm::inverseTranspose(glm::mat3(camera->GetViewMatrix()*portalModelMatrix));
-        portalModel->SetShaderUniformParameter("modelMatrix", &portalModelMatrix);
-        portalModel->SetShaderUniformParameter("normalMatrix", &portalNormalMatrix);
-        portalMaterial->Use();
-        portalModel->Draw();
+        for (SceneObject* object : SceneObject::GetAllActiveSceneObjects())
+        {
+            object->Update(deltaTime);
+        }
     }
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, 0);

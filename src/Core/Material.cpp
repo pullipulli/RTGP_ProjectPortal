@@ -84,3 +84,8 @@ Material& Material::AddTexture(const std::string& textureId)
 
     return *this;
 }
+
+Shader& Material::GetShader() const
+{
+    return *shader;
+}

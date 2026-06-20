@@ -24,6 +24,8 @@ public:
     Material& AddKs(GLfloat Ks);
     Material& AddTexture(const std::string& textureId);
 
+    Shader& GetShader() const;
+
     Material() = delete;
 private:
     glm::vec3 diffuseColor{0};
