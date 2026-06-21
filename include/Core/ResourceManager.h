@@ -21,7 +21,7 @@ public:
     static ResourceManager* GetInstance();
 
     /// Tries to create and put a new Model into the map; if it already exists then it just returns the old object
-    Model* InitializeModel(const std::string& pathKey, Shader* initialAppliedShader);
+    Model* InitializeModel(const std::string& pathKey);
     /// Tries to create and put a new Shader into the map; if it already exists then it just returns the old object
     Shader* InitializeShader(const std::string& shaderNameKey, const std::string& vertexPath, const std::string& fragmentShader);
     /// Tries to create and put a new Texture into the map; if it already exists then it just returns the old object

@@ -91,8 +91,8 @@ void Application::StartApplication()
         "shaders/vertex/globalShader.vert", "shaders/fragment/globalShader.frag"
     );
 
-    cubeModel = resourceManager->InitializeModel("../assets/models/cube.obj", globalShader);     // I will use a scaled cube to simulate the static floor/plane
-    portalModel = resourceManager->InitializeModel("../assets/models/portal.obj", globalShader);
+    cubeModel = resourceManager->InitializeModel("../assets/models/cube.obj");     // I will use a scaled cube to simulate the static floor/plane
+    portalModel = resourceManager->InitializeModel("../assets/models/portal.obj");
 
     planeMaterial = &Material::Create(globalShader->GetShaderId())
                         .AddDiffuse(glm::vec3(0, 1, 0))

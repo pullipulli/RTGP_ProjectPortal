@@ -9,6 +9,7 @@
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/gtc/matrix_inverse.inl"
 #include "utils/model.h"
+#include "utils/shader.h"
 
 std::vector<SceneObject*> SceneObject::sceneObjects{};
 

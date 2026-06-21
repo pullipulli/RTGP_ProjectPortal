@@ -35,7 +35,6 @@ Universita' degli Studi di Milano
 
 #include <iostream>
 
-#include "shader.h"
 using namespace std;
 
 /////////////////// MODEL class ///////////////////////
@@ -71,66 +70,10 @@ public:
     // to notice that Model class is not strictly following the Rules of 5
     // https://en.cppreference.com/w/cpp/language/rule_of_three
     // because we are not writing a user-defined destructor.
-    Model(const string& path, Shader& shader) : appliedShader(shader)
+    Model(const string& path)
     {
         this->loadModel(path);
         this->modelId = path;
-    }
-
-    void UseShader()
-    {
-        this->appliedShader.Use();
-    }
-
-    void SwapShader(Shader newShader)
-    {
-        this->appliedShader = newShader;
-    }
-
-
-    void SetShaderUniformParameter(std::string parameterName, float value)
-    {
-        this->appliedShader.SetUniformParameter(parameterName, value);
-    }
-
-    void SetShaderUniformParameter(std::string parameterName, int value)
-    {
-        this->appliedShader.SetUniformParameter(parameterName, value);
-    }
-
-    void SetShaderUniformParameter(std::string parameterName, bool value)
-    {
-        this->appliedShader.SetUniformParameter(parameterName, value);
-    }
-
-    void SetShaderUniformParameter(std::string parameterName, glm::vec2* value)
-    {
-        this->appliedShader.SetUniformParameter(parameterName, value);
-    }
-
-    void SetShaderUniformParameter(std::string parameterName, glm::vec3* value)
-    {
-        this->appliedShader.SetUniformParameter(parameterName, value);
-    }
-
-    void SetShaderUniformParameter(std::string parameterName, glm::vec4* value)
-    {
-        this->appliedShader.SetUniformParameter(parameterName, value);
-    }
-
-    void SetShaderUniformParameter(std::string parameterName, glm::mat2* value)
-    {
-        this->appliedShader.SetUniformParameter(parameterName, value);
-    }
-
-    void SetShaderUniformParameter(std::string parameterName, glm::mat3* value)
-    {
-        this->appliedShader.SetUniformParameter(parameterName, value);
-    }
-
-    void SetShaderUniformParameter(std::string parameterName, glm::mat4* value)
-    {
-        this->appliedShader.SetUniformParameter(parameterName, value);
     }
 
     //////////////////////////////////////////
@@ -151,7 +94,6 @@ public:
 
 
 private:
-    Shader appliedShader;
     std::string modelId;
 
     //////////////////////////////////////////

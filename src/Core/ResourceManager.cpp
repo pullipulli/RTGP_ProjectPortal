@@ -25,9 +25,9 @@ ResourceManager * ResourceManager::GetInstance()
     return instance;
 }
 
-Model* ResourceManager::InitializeModel(const std::string& pathKey, Shader* initialAppliedShader)
+Model* ResourceManager::InitializeModel(const std::string& pathKey)
 {
-    auto [pair, inserted] = models.try_emplace(pathKey, pathKey, *initialAppliedShader);
+    auto [pair, inserted] = models.try_emplace(pathKey, pathKey);
 
     return &pair->second;
 }
