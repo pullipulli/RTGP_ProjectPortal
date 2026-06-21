@@ -102,6 +102,19 @@ RenderTexture* ResourceManager::GetRenderTexture(const std::string &key)
     return nullptr;
 }
 
+std::vector<RenderTexture*> ResourceManager::GetAllRenderTextures()
+{
+    std::vector<RenderTexture*> out{};
+    out.reserve(renderTextures.size());
+
+    for (auto [_, value] : renderTextures)
+        {
+            out.push_back(&value);
+        }
+
+    return out;
+}
+
 ResourceManager::ResourceManager()
 {
     std::cout << "Created Singleton ResourceManager!";

@@ -33,6 +33,7 @@ public:
     Shader* GetShader(const std::string& key);
     Texture* GetTexture(const std::string& key);
     RenderTexture* GetRenderTexture(const std::string& key);
+    std::vector<RenderTexture*> GetAllRenderTextures();
 protected:
     ResourceManager();
     ~ResourceManager() = default;

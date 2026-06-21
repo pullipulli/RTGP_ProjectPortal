@@ -85,16 +85,16 @@ void Application::StartApplication()
     glDepthFunc(GL_LESS);
     glEnable(GL_CULL_FACE);
     ResourceManager* resourceManager = ResourceManager::GetInstance();
-    renderTexture = resourceManager->InitializeRenderTexture("PortalTexture", 512, 256);
+    RenderTexture* portalRenderTexture = resourceManager->InitializeRenderTexture("PortalTexture", 512, 256);
 
     Shader* globalShader = resourceManager->InitializeShader("GlobalShader",
         "shaders/vertex/globalShader.vert", "shaders/fragment/globalShader.frag"
     );
 
-    cubeModel = resourceManager->InitializeModel("../assets/models/cube.obj");     // I will use a scaled cube to simulate the static floor/plane
-    portalModel = resourceManager->InitializeModel("../assets/models/portal.obj");
+    Model* cubeModel = resourceManager->InitializeModel("../assets/models/cube.obj");     // I will use a scaled cube to simulate the static floor/plane
+    Model* portalModel = resourceManager->InitializeModel("../assets/models/portal.obj");
 
-    planeMaterial = &Material::Create(globalShader->GetShaderId())
+    Material* planeMaterial = &Material::Create(globalShader->GetShaderId())
                         .AddDiffuse(glm::vec3(0, 1, 0))
                         .AddSpecular(glm::vec3(0, 0, 0))
                         .AddShininess(1.f)
@@ -102,14 +102,14 @@ void Application::StartApplication()
                         .AddKs(0.f)
                         .AddKd(.9f);
 
-    portalMaterial = &Material::Create(globalShader->GetShaderId())
+    Material* portalMaterial = &Material::Create(globalShader->GetShaderId())
                     .AddDiffuse(glm::vec3(0, 1, 0))
                     .AddSpecular(glm::vec3(0, 0, 0))
                     .AddShininess(1.f)
                     .AddKa(.05f)
                     .AddKs(0.f)
                     .AddKd(.9f)
-                    .AddTexture(renderTexture->GetTextureResourceId());
+                    .AddTexture(portalRenderTexture->GetTextureResourceId());
 
     SceneObject portalObject{
         glm::vec3(-3, 1, 0),
@@ -156,8 +156,11 @@ void Application::StartApplication()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        renderTexture->BindFrameBuffer();
-        DrawScene(RenderPass::RenderTexture);
+        for (auto renderTexture: ResourceManager::GetInstance()->GetAllRenderTextures())
+        {
+            renderTexture->BindFrameBuffer();
+            DrawScene(RenderPass::RenderTexture);
+        }
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glViewport(0, 0, screenWidth, screenHeight);

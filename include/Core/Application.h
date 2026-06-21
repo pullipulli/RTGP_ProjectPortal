@@ -40,12 +40,4 @@ private:
     glm::vec3 ambientColor;
 
     glm::vec3 lightPos0 = glm::vec3(-5.0f, 5.0f, 1.0f);
-
-    RenderTexture* renderTexture;
-
-    Model* cubeModel;
-    Model* portalModel;
-
-    Material* planeMaterial;
-    Material* portalMaterial;
 };
