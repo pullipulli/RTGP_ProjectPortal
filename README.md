@@ -14,6 +14,7 @@
 
 ## TODO LIST
 
+1) Add list of RenderTextures to  bind for each render pass
 1) Add Point and Directional Lights and then create finally a decent shader using GLSL arrays (https://stackoverflow.com/questions/8099979/creating-a-glsl-arrays-of-uniforms) and following https://learnopengl.com/Lighting/Multiple-lights.
 2) Renderer class (contains all the openGL native function calls and render a scene to the screen)
 3) Scene class (contains ALL the GameObjects)
