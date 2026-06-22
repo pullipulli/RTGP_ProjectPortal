@@ -117,63 +117,63 @@ public:
     // We delete the Shader Program when application closes
     void Delete() { glDeleteProgram(this->Program); }
 
-	void SetUniformParameter(std::string parameterName, float value)
+	void SetUniformParameter(const std::string& parameterName, float value)
 	{
     	GLint uniformLocation = glGetUniformLocation(Program, parameterName.c_str());
 
     	glUniform1f(uniformLocation, value);
     }
 
-	void SetUniformParameter(std::string parameterName, int value)
+	void SetUniformParameter(const std::string& parameterName, int value)
     {
     	GLint uniformLocation = glGetUniformLocation(Program, parameterName.c_str());
 
     	glUniform1i(uniformLocation, value);
     }
 
-	void SetUniformParameter(std::string parameterName, bool value)
+	void SetUniformParameter(const std::string& parameterName, bool value)
     {
     	GLint uniformLocation = glGetUniformLocation(Program, parameterName.c_str());
 
     	glUniform1i(uniformLocation, value);
     }
 
-	void SetUniformParameter(std::string parameterName, const glm::vec2* value)
+	void SetUniformParameter(const std::string& parameterName, const glm::vec2* value)
     {
     	GLint uniformLocation = glGetUniformLocation(Program, parameterName.c_str());
 
     	glUniform2fv(uniformLocation, 1, glm::value_ptr(*value));
     }
 
-	void SetUniformParameter(std::string parameterName, const glm::vec3* value)
+	void SetUniformParameter(const std::string& parameterName, const glm::vec3* value)
     {
     	GLint uniformLocation = glGetUniformLocation(Program, parameterName.c_str());
 
     	glUniform3fv(uniformLocation, 1, glm::value_ptr(*value));
     }
 
-	void SetUniformParameter(std::string parameterName, const glm::vec4* value)
+	void SetUniformParameter(const std::string& parameterName, const glm::vec4* value)
     {
     	GLint uniformLocation = glGetUniformLocation(Program, parameterName.c_str());
 
     	glUniform4fv(uniformLocation, 1, glm::value_ptr(*value));
     }
 
-	void SetUniformParameter(std::string parameterName, const glm::mat2* value)
+	void SetUniformParameter(const std::string& parameterName, const glm::mat2* value)
     {
     	GLint uniformLocation = glGetUniformLocation(Program, parameterName.c_str());
 
     	glUniformMatrix2fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(*value));
     }
 
-	void SetUniformParameter(std::string parameterName, const glm::mat3* value)
+	void SetUniformParameter(const std::string& parameterName, const glm::mat3* value)
     {
     	GLint uniformLocation = glGetUniformLocation(Program, parameterName.c_str());
 
     	glUniformMatrix3fv(uniformLocation, 1, GL_FALSE, glm::value_ptr(*value));
     }
 
-	void SetUniformParameter(std::string parameterName, const glm::mat4* value)
+	void SetUniformParameter(const std::string& parameterName, const glm::mat4* value)
     {
     	GLint uniformLocation = glGetUniformLocation(Program, parameterName.c_str());
 
