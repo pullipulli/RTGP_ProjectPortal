@@ -39,9 +39,13 @@
 Application::Application(float screenWidth, float screenHeight)
 : screenWidth(screenWidth), screenHeight(screenHeight)
 {
-    this->camera = new Camera(glm::vec3(0,0,7), GL_TRUE, 45.f, screenWidth/screenHeight, 0.1f, 100000.f);
-    this->bulletSimulation = new Physics();
+    this->camera = std::make_unique<Camera>(glm::vec3(0,0,7), GL_TRUE, 45.f, screenWidth/screenHeight, 0.1f, 100000.f);
+    this->bulletSimulation = std::make_unique<Physics>();
     this->ambientColor = glm::vec3(1.f, 1.f, 1.f);
+}
+
+Application::~Application()
+{
 }
 
 void Application::StartApplication()
@@ -68,7 +72,7 @@ void Application::StartApplication()
         return;
     }
 
-    input = new Input(window, GL_TRUE);
+    input = std::make_unique<Input>(window, GL_TRUE);
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
