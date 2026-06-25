@@ -23,13 +23,13 @@ Material::Material(const std::string& shaderId)
 
 void Material::Use() const
 {
-    shader->SetUniformParameter("diffuseColor", &diffuseColor);
-    shader->SetUniformParameter("specularColor", &specularColor);
-    shader->SetUniformParameter("Ka", Ka);
-    shader->SetUniformParameter("Kd", Kd);
-    shader->SetUniformParameter("Ks", Ks);
-    shader->SetUniformParameter("shininess", shininess);
-    shader->SetUniformParameter("hasTexture", texture != nullptr);
+    shader->SetUniformParameter("material.diffuse", &diffuseColor);
+    shader->SetUniformParameter("material.specular", &specularColor);
+    shader->SetUniformParameter("material.Ka", Ka);
+    shader->SetUniformParameter("material.Kd", Kd);
+    shader->SetUniformParameter("material.Ks", Ks);
+    shader->SetUniformParameter("material.shininess", shininess);
+    shader->SetUniformParameter("material.hasTexture", texture != nullptr);
 
     if (texture)
         texture->BindTexture();
