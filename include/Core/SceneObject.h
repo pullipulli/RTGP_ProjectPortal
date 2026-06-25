@@ -34,11 +34,6 @@ protected:
 private:
     glm::mat4 CalculateModelMatrix() const;
 
-    // TODO remove lighting variables from here
-    glm::vec3 ambientColor{1};
-    glm::vec3 lightPos0 = glm::vec3(-5.0f, 5.0f, 1.0f);
-
-
     //TODO: add rigidbody!
 
     static std::vector<SceneObject*> sceneObjects;

@@ -38,8 +38,4 @@ private:
 
     void ApplyCameraMovements();
     std::unique_ptr<Input> input;
-
-    // Blinn-Phong equation parameters. To be replaced with arrays of lights
-    glm::vec3 ambientColor;
-    glm::vec3 lightPos0 = glm::vec3(-5.0f, 5.0f, 1.0f);
 };

@@ -16,6 +16,7 @@
 #include "Core/RenderTexture.h"
 #include "BulletDynamics/Dynamics/btRigidBody.h"
 #include "Core/Material.h"
+#include "Core/PointLight.h"
 #include "Core/ResourceManager.h"
 #include "Core/SceneObject.h"
 #include "glm/gtc/matrix_inverse.hpp"
@@ -41,7 +42,6 @@ Application::Application(float screenWidth, float screenHeight)
 {
     this->camera = std::make_unique<Camera>(glm::vec3(0,0,7), GL_TRUE, 45.f, screenWidth/screenHeight, 0.1f, 100000.f);
     this->bulletSimulation = std::make_unique<Physics>();
-    this->ambientColor = glm::vec3(1.f, 1.f, 1.f);
 }
 
 Application::~Application()
@@ -101,18 +101,12 @@ void Application::StartApplication()
     Material* planeMaterial = &Material::Create(globalShader->GetShaderId())
                         .AddDiffuse(glm::vec3(0, 1, 0))
                         .AddSpecular(glm::vec3(0, 0, 0))
-                        .AddShininess(1.f)
-                        .AddKa(.05f)
-                        .AddKs(0.f)
-                        .AddKd(.9f);
+                        .AddShininess(1.f);
 
     Material* portalMaterial = &Material::Create(globalShader->GetShaderId())
                     .AddDiffuse(glm::vec3(0, 1, 0))
                     .AddSpecular(glm::vec3(0, 0, 0))
                     .AddShininess(1.f)
-                    .AddKa(.05f)
-                    .AddKs(0.f)
-                    .AddKd(.9f)
                     .AddTexture(portalRenderTexture->GetTextureResourceId());
 
     SceneObject portalObject{
@@ -130,6 +124,16 @@ void Application::StartApplication()
         planeMaterial,
         cubeModel->GetModelId()
     };
+
+    PointLight pointLight;
+
+    pointLight.position = glm::vec3(-5, 5, 1);
+    pointLight.ambientColor = glm::vec3{1};
+    pointLight.diffuseColor = glm::vec3{1};
+    pointLight.specularColor = glm::vec3{0};
+    pointLight.Ka = 0.05f;
+    pointLight.Kd = .9f;
+    pointLight.Ks = 0;
 
     //btRigidBody* plane = bulletSimulation->createRigidBody(BOX,plane_pos,plane_size,plane_rot,0.0f,0.3f,0.3f);
 

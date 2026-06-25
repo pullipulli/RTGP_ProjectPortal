@@ -31,13 +31,21 @@ struct Material
     vec3 diffuse;
     vec3 specular;
     float shininess;
-    float Ka;
-    float Kd;
-    float Ks;
     bool hasTexture;
 };
 
+struct Light
+{
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    float Ka;
+    float Kd;
+    float Ks;
+};
+
 uniform Material material;
+uniform Light light;
 
 uniform sampler2D ourTexture;
 
@@ -45,7 +53,7 @@ uniform sampler2D ourTexture;
 void main()
 {
     // ambient component can be calculated at the beginning
-    vec3 color = material.Ka * material.ambient;
+    vec3 color = light.Ka * light.ambient * material.ambient;
 
     vec3 lightNormalizedDirection = normalize(lightDir);
 
@@ -70,8 +78,9 @@ void main()
 
         // We add diffusive and specular components to the final color
         // N.B. ): in this implementation, the sum of the components can be different than 1
-        color += vec3( material.Kd * lambertian * material.diffuse +
-        material.Ks * specular * material.specular);
+        vec3 totalDiffuse = vec3(light.Kd * lambertian * light.diffuse * material.diffuse);
+        vec3 totalSpecular = vec3(light.Ks * specular * light.specular * material.specular);
+        color += totalDiffuse + totalSpecular;
     }
     colorFrag = vec4(color,1.0);
     if (material.hasTexture)

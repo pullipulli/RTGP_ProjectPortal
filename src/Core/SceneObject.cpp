@@ -31,8 +31,6 @@ void SceneObject::Render(glm::mat4 viewMatrix, glm::mat4 projectionMatrix, Rende
     material->GetShader().SetUniformParameter("projectionMatrix", &projectionMatrix);
     material->GetShader().SetUniformParameter("projectionMatrix", &projectionMatrix);
     material->GetShader().SetUniformParameter("viewMatrix", &viewMatrix);
-    material->GetShader().SetUniformParameter("pointLightPosition", &lightPos0);
-    material->GetShader().SetUniformParameter("ambientColor", &ambientColor);
 
     glm::mat4 modelMatrix = CalculateModelMatrix();
     // if we cast a mat4 to a mat3, we are automatically considering the upper left 3x3 submatrix

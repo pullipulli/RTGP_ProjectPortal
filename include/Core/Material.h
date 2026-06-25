@@ -16,24 +16,20 @@ class Material
 public:
     static Material Create(const std::string& shaderId);
     void Use() const;
+    Material& AddAmbient(const glm::vec3& ambient);
     Material& AddDiffuse(const glm::vec3& diffuse);
     Material& AddSpecular(const glm::vec3& specular);
     Material& AddShininess(GLfloat shininess);
-    Material& AddKa(GLfloat Ka);
-    Material& AddKd(GLfloat Kd);
-    Material& AddKs(GLfloat Ks);
     Material& AddTexture(const std::string& textureId);
 
     Shader& GetShader() const;
 
     Material() = delete;
 private:
+    glm::vec3 ambientColor{1};
     glm::vec3 diffuseColor{0};
     glm::vec3 specularColor{0};
     GLfloat shininess{1.f};
-    GLfloat Ka{.5f};
-    GLfloat Kd{.5f};
-    GLfloat Ks{.5f};
 
     Texture* texture{nullptr};
     Shader* shader;
