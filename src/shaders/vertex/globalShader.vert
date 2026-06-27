@@ -27,8 +27,7 @@ uniform mat4 projectionMatrix;
 
 uniform mat3 normalMatrix;
 
-uniform vec3 pointLightPosition;
-out vec3 lightDir;
+out vec3 fragmentPosition;
 
 out vec3 vertexNormal;
 out vec3 vertexViewPosition;
@@ -42,8 +41,7 @@ void main()
 
     vertexNormal = normalize( normalMatrix * normal );
 
-    vec4 lightPos = viewMatrix  * vec4(pointLightPosition, 1.0);
-    lightDir = lightPos.xyz - modelViewPosition.xyz;
+    fragmentPosition = vec3(modelMatrix * vec4(position, 1.0));
 
     gl_Position = projectionMatrix * modelViewPosition;
 

@@ -37,7 +37,7 @@ void Material::Use() const
     shader->SetUniformParameter("light.Ka", PointLight::lights[0]->Ka);
     shader->SetUniformParameter("light.Kd", PointLight::lights[0]->Kd);
     shader->SetUniformParameter("light.Ks", PointLight::lights[0]->Ks);
-    shader->SetUniformParameter("pointLightPosition", &PointLight::lights[0]->position);
+    shader->SetUniformParameter("light.position", &PointLight::lights[0]->position);
 
     if (texture)
         texture->BindTexture();

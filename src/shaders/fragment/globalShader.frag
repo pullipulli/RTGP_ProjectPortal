@@ -16,13 +16,11 @@ Universita' degli Studi di Milano
 // output shader variable
 out vec4 colorFrag;
 
-// light incidence direction (calculated in vertex shader, interpolated by rasterization)
-in vec3 lightDir;
 // the transformed normal has been calculated per-vertex in the vertex shader
 in vec3 vertexNormal;
 // vector from fragment to camera (in view coordinate)
 in vec3 vertexViewPosition;
-
+in vec3 fragmentPosition;
 in vec2 TexCoordinates;
 
 struct Material
@@ -36,6 +34,7 @@ struct Material
 
 struct Light
 {
+    vec3 position;
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
@@ -55,7 +54,7 @@ void main()
     // ambient component can be calculated at the beginning
     vec3 color = light.Ka * light.ambient * material.ambient;
 
-    vec3 lightNormalizedDirection = normalize(lightDir);
+    vec3 lightNormalizedDirection = normalize(light.position - fragmentPosition);
 
     vec3 normalizedVertexNormal = normalize(vertexNormal);
 
