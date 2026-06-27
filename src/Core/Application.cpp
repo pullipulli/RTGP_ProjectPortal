@@ -135,6 +135,16 @@ void Application::StartApplication()
     pointLight.Kd = .9f;
     pointLight.Ks = 0;
 
+    PointLight pointLight1;
+
+    pointLight1.position = glm::vec3(5, 5, 1);
+    pointLight1.ambientColor = glm::vec3{.5};
+    pointLight1.diffuseColor = glm::vec3{1};
+    pointLight1.specularColor = glm::vec3{.1};
+    pointLight1.Ka = 0.05f;
+    pointLight1.Kd = .9f;
+    pointLight1.Ks = 0;
+
     //btRigidBody* plane = bulletSimulation->createRigidBody(BOX,plane_pos,plane_size,plane_rot,0.0f,0.3f,0.3f);
 
     for (SceneObject* object : SceneObject::GetAllActiveSceneObjects())

@@ -30,14 +30,20 @@ void Material::Use() const
     shader->SetUniformParameter("material.shininess", shininess);
     shader->SetUniformParameter("material.hasTexture", texture != nullptr);
 
-    // TODO handle multiple lights at once!
-    shader->SetUniformParameter("light.ambient", &PointLight::lights[0]->ambientColor);
-    shader->SetUniformParameter("light.diffuse", &PointLight::lights[0]->diffuseColor);
-    shader->SetUniformParameter("light.specular", &PointLight::lights[0]->specularColor);
-    shader->SetUniformParameter("light.Ka", PointLight::lights[0]->Ka);
-    shader->SetUniformParameter("light.Kd", PointLight::lights[0]->Kd);
-    shader->SetUniformParameter("light.Ks", PointLight::lights[0]->Ks);
-    shader->SetUniformParameter("light.position", &PointLight::lights[0]->position);
+    shader->SetUniformParameter("currentLightNumber", static_cast<int>(PointLight::lights.size()));
+
+    std::string lightStringPrefix = "lights[";
+
+    for (int i = 0; i < PointLight::lights.size(); i++)
+    {
+        shader->SetUniformParameter(lightStringPrefix + std::to_string(i) + "].ambient", &PointLight::lights[i]->ambientColor);
+        shader->SetUniformParameter(lightStringPrefix + std::to_string(i) + "].diffuse", &PointLight::lights[i]->diffuseColor);
+        shader->SetUniformParameter(lightStringPrefix + std::to_string(i) + "].specular", &PointLight::lights[i]->specularColor);
+        shader->SetUniformParameter(lightStringPrefix + std::to_string(i) + "].Ka", PointLight::lights[i]->Ka);
+        shader->SetUniformParameter(lightStringPrefix + std::to_string(i) + "].Kd", PointLight::lights[i]->Kd);
+        shader->SetUniformParameter(lightStringPrefix + std::to_string(i) + "].Ks", PointLight::lights[i]->Ks);
+        shader->SetUniformParameter(lightStringPrefix + std::to_string(i) + "].position", &PointLight::lights[i]->position);
+    }
 
     if (texture)
         texture->BindTexture();

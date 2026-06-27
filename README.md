@@ -14,9 +14,7 @@
 
 ## TODO LIST
 
-1) Add Point and Directional Lights and then create finally a decent shader using GLSL arrays (https://stackoverflow.com/questions/8099979/creating-a-glsl-arrays-of-uniforms) and following https://learnopengl.com/Lighting/Multiple-lights.
-2) Scene class (contains ALL the GameObjects)
-3) Physics! Also, make Physics class attribute pointers allocated on the heap use std::unique_ptr
+1) Physics! Also, make Physics class attribute pointers allocated on the heap use std::unique_ptr
 
 ### Other Ideas
 - In the material class you should use different maps for each different uniform parameter type!

@@ -43,20 +43,41 @@ struct Light
     float Ks;
 };
 
+#define MAX_LIGHT_NUMBER 150
+uniform Light lights[MAX_LIGHT_NUMBER];
+
 uniform Material material;
-uniform Light light;
+uniform int currentLightNumber;
 
 uniform sampler2D ourTexture;
 
+vec3 CalculatePointLightColor(Light light, vec3 normalizedVertexNormal, vec3 viewDirection);
+
 // blinnPhong shading
 void main()
+{
+    vec3 color = vec3(0);
+    vec3 normalizedVertexNormal = normalize(vertexNormal);
+    vec3 viewDirection = normalize(vertexViewPosition);
+
+    for (int i = 0; i < currentLightNumber; i++)
+    {
+        color += CalculatePointLightColor(lights[i], normalizedVertexNormal, viewDirection);
+    }
+
+    colorFrag = vec4(color,1.0);
+    if (material.hasTexture)
+    {
+        colorFrag *= texture(ourTexture, TexCoordinates);
+    }
+}
+
+vec3 CalculatePointLightColor(Light light, vec3 normalizedVertexNormal, vec3 viewDirection)
 {
     // ambient component can be calculated at the beginning
     vec3 color = light.Ka * light.ambient * material.ambient;
 
     vec3 lightNormalizedDirection = normalize(light.position - fragmentPosition);
-
-    vec3 normalizedVertexNormal = normalize(vertexNormal);
 
     // Lambert coefficient
     float lambertian = max(dot(lightNormalizedDirection, normalizedVertexNormal), 0.0);
@@ -64,9 +85,6 @@ void main()
     // if the lambert coefficient is positive, then I can calculate the specular component
     if(lambertian > 0.0)
     {
-        // the view vector has been calculated in the vertex shader, already negated to have direction from the mesh to the camera
-        vec3 viewDirection = normalize( vertexViewPosition );
-
         // in the Blinn-Phong model we do not use the reflection vector, but the half vector
         vec3 halfwayDirection = normalize(lightNormalizedDirection + viewDirection);
 
@@ -81,9 +99,6 @@ void main()
         vec3 totalSpecular = vec3(light.Ks * specular * light.specular * material.specular);
         color += totalDiffuse + totalSpecular;
     }
-    colorFrag = vec4(color,1.0);
-    if (material.hasTexture)
-    {
-        colorFrag *= texture(ourTexture, TexCoordinates);
-    }
+
+    return color;
 }
