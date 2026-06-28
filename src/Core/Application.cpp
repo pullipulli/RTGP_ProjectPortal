@@ -13,15 +13,15 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Core/Input.h"
-#include "Core/RenderTexture.h"
-#include "Core/Material.h"
-#include "Core/PointLight.h"
-#include "Core/ResourceManager.h"
+#include "Core/Graphics/Texture/RenderTexture.h"
+#include "Core/Graphics/Material.h"
+#include "Core/Graphics/PointLight.h"
+#include "Core/Graphics/ResourceManager.h"
 #include "Core/SceneObject.h"
 #include "glm/gtc/matrix_inverse.hpp"
-#include "utils/camera.h"
-#include "utils/model.h"
-#include "../../include/Core/Physics.h"
+#include "Core/Camera.h"
+#include "Core/Graphics/Model/Model.h"
+#include "Core/Physics.h"
 
 #ifdef _WINDOWS_
     #error windows.h was included!
@@ -33,7 +33,7 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
-#include <utils/shader.h>
+#include <../../include/Core/Graphics/Shader.h>
 
 
 Application::Application(float screenWidth, float screenHeight)

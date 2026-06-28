@@ -65,13 +65,17 @@ add_executable(RTGPProject_Portal
         src/Core/main.cpp include ${IMGUI_SOURCES} ${IMGUI_BACKENDS}
         src/Core/Input.cpp
         src/Core/Application.cpp
-        src/Core/RenderTexture.cpp
-        src/Core/Texture.cpp
-        src/Core/ResourceManager.cpp
-        src/Core/Material.cpp
         src/Core/SceneObject.cpp
-        src/Core/PointLight.cpp
         src/Core/Physics.cpp
+        src/Core/Camera.cpp
+        src/Core/Graphics/Texture/RenderTexture.cpp
+        src/Core/Graphics/Texture/Texture.cpp
+        src/Core/Graphics/ResourceManager.cpp
+        src/Core/Graphics/Material.cpp
+        src/Core/Graphics/PointLight.cpp
+        src/Core/Graphics/Model/Mesh.cpp
+        src/Core/Graphics/Model/Model.cpp
+        src/Core/Graphics/Shader.cpp
 )
 
 target_include_directories(RTGPProject_Portal PUBLIC

@@ -6,7 +6,7 @@
 #include <memory>
 
 #include "glm/vec3.hpp"
-#include "RenderTexture.h"
+#include "Core/Graphics/Texture/RenderTexture.h"
 
 class Camera;
 class Input;

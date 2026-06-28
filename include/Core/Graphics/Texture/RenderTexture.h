@@ -3,7 +3,7 @@
 //
 
 #pragma once
-#include "Texture.h"
+#include "Core/Graphics/Texture/Texture.h"
 
 typedef unsigned int GLuint;
 typedef float GLfloat;

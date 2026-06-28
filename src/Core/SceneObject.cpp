@@ -4,13 +4,13 @@
 
 #include "Core/SceneObject.h"
 
-#include "Core/Material.h"
+#include "Core/Graphics/Material.h"
 #include "Core/Physics.h"
-#include "Core/ResourceManager.h"
+#include "Core/Graphics/ResourceManager.h"
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/gtc/matrix_inverse.inl"
-#include "utils/model.h"
-#include "utils/shader.h"
+#include "Core/Graphics/Model/Model.h"
+#include "Core/Graphics/Shader.h"
 #include "BulletDynamics/Dynamics/btRigidBody.h"
 
 std::vector<SceneObject*> SceneObject::sceneObjects{};

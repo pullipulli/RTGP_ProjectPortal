@@ -3,10 +3,10 @@
 // Created starting from this guide https://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/
 //
 
-#include "Core/RenderTexture.h"
+#include "Core/Graphics/Texture/RenderTexture.h"
 
 #include <glad/glad.h>
-#include "utils/shader.h"
+#include "Core/Graphics/Shader.h"
 #include <glm/glm.hpp>
 #include <cassert>
 

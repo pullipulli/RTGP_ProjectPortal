@@ -5,7 +5,7 @@
 #pragma once
 #include "glm/glm.hpp"
 #include <string>
-#include "RenderTexture.h"
+#include "Core/Graphics/Texture/RenderTexture.h"
 
 class SceneObject
 {
@@ -30,11 +30,10 @@ protected:
     glm::vec3 scale{1};
     class Material* material = nullptr;
     class Model* model = nullptr;
+    class btRigidBody* rb = nullptr;
 
 private:
     glm::mat4 CalculateModelMatrix() const;
-
-    class btRigidBody* rb;
 
     static std::vector<SceneObject*> sceneObjects;
 };

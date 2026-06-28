@@ -2,11 +2,11 @@
 // Created by Andrea Pullia on 13/06/2026.
 //
 
-#include "Core/ResourceManager.h"
-#include "utils/model.h"
-#include "utils/shader.h"
-#include "Core/Texture.h"
-#include "Core/RenderTexture.h"
+#include "Core/Graphics/ResourceManager.h"
+#include "Core/Graphics/Model/Model.h"
+#include "Core/Graphics/Shader.h"
+#include "Core/Graphics/Texture/Texture.h"
+#include "Core/Graphics/Texture/RenderTexture.h"
 #include <glad/glad.h>
 #include <iostream>
 

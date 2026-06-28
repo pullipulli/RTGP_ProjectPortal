@@ -2,15 +2,15 @@
 // Created by Andrea Pullia on 17/06/2026.
 //
 
-#include "Core/Material.h"
+#include "Core/Graphics/Material.h"
 
-#include "Core/ResourceManager.h"
-#include "utils/shader.h"
+#include "Core/Graphics/ResourceManager.h"
+#include "Core/Graphics/Shader.h"
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-#include "Core/PointLight.h"
-#include "Core/Texture.h"
+#include "Core/Graphics/PointLight.h"
+#include "Core/Graphics/Texture/Texture.h"
 
 Material Material::Create(const std::string& shaderId)
 {
