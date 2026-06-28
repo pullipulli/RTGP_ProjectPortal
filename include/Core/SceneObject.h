@@ -12,7 +12,7 @@ class SceneObject
 public:
     virtual ~SceneObject() = default;
 
-    SceneObject(const glm::vec3& initialPosition, const glm::vec3& initialRotation, const glm::vec3& initialScale, class Material* material = nullptr, const std::string& modelResourceId = "");
+    SceneObject(const glm::vec3& initialPosition, const glm::vec3& initialRotation, const glm::vec3& initialScale, class Material* material = nullptr, const std::string& modelResourceId = "", bool hasRigidbody = false);
 
     /// Called after the construction of all SceneObjects
     virtual void Start() {}
@@ -34,7 +34,7 @@ protected:
 private:
     glm::mat4 CalculateModelMatrix() const;
 
-    //TODO: add rigidbody!
+    class btRigidBody* rb;
 
     static std::vector<SceneObject*> sceneObjects;
 };

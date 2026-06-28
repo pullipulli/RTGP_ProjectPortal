@@ -5,11 +5,13 @@
 #include "Core/SceneObject.h"
 
 #include "Core/Material.h"
+#include "Core/Physics.h"
 #include "Core/ResourceManager.h"
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/gtc/matrix_inverse.inl"
 #include "utils/model.h"
 #include "utils/shader.h"
+#include "BulletDynamics/Dynamics/btRigidBody.h"
 
 std::vector<SceneObject*> SceneObject::sceneObjects{};
 
@@ -50,7 +52,7 @@ const std::vector<SceneObject*> SceneObject::GetAllActiveSceneObjects()
     return sceneObjects;
 }
 
-SceneObject::SceneObject(const glm::vec3 &initialPosition, const glm::vec3 &initialRotation, const glm::vec3 &initialScale, Material* material, const std::string& modelResourceId)
+SceneObject::SceneObject(const glm::vec3 &initialPosition, const glm::vec3 &initialRotation, const glm::vec3 &initialScale, Material* material, const std::string& modelResourceId, bool hasRigidbody)
 {
     position = initialPosition;
     rotation = initialRotation;
@@ -61,4 +63,9 @@ SceneObject::SceneObject(const glm::vec3 &initialPosition, const glm::vec3 &init
         model = ResourceManager::GetInstance()->GetModel(modelResourceId);
 
     sceneObjects.push_back(this);
+
+    if (hasRigidbody)
+    {
+        rb = Physics::GetInstance()->createRigidBody(BOX,position,scale,rotation,0.0f,0.3f,0.3f);   // only boxes supported right now
+    }
 }

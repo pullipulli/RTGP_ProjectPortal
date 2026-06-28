@@ -71,6 +71,7 @@ add_executable(RTGPProject_Portal
         src/Core/Material.cpp
         src/Core/SceneObject.cpp
         src/Core/PointLight.cpp
+        src/Core/Physics.cpp
 )
 
 target_include_directories(RTGPProject_Portal PUBLIC

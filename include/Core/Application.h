@@ -34,7 +34,6 @@ private:
     float currentFrameTime = 0;
 
     std::unique_ptr<Camera> camera;
-    std::unique_ptr<Physics> bulletSimulation;
 
     void ApplyCameraMovements();
     std::unique_ptr<Input> input;

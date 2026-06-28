@@ -14,7 +14,6 @@
 
 #include "Core/Input.h"
 #include "Core/RenderTexture.h"
-#include "BulletDynamics/Dynamics/btRigidBody.h"
 #include "Core/Material.h"
 #include "Core/PointLight.h"
 #include "Core/ResourceManager.h"
@@ -22,7 +21,7 @@
 #include "glm/gtc/matrix_inverse.hpp"
 #include "utils/camera.h"
 #include "utils/model.h"
-#include "utils/physics.h"
+#include "../../include/Core/Physics.h"
 
 #ifdef _WINDOWS_
     #error windows.h was included!
@@ -41,7 +40,6 @@ Application::Application(float screenWidth, float screenHeight)
 : screenWidth(screenWidth), screenHeight(screenHeight)
 {
     this->camera = std::make_unique<Camera>(glm::vec3(0,0,7), GL_TRUE, 45.f, screenWidth/screenHeight, 0.1f, 100000.f);
-    this->bulletSimulation = std::make_unique<Physics>();
 }
 
 Application::~Application()
@@ -145,8 +143,6 @@ void Application::StartApplication()
     pointLight1.Kd = .9f;
     pointLight1.Ks = 0;
 
-    //btRigidBody* plane = bulletSimulation->createRigidBody(BOX,plane_pos,plane_size,plane_rot,0.0f,0.3f,0.3f);
-
     for (SceneObject* object : SceneObject::GetAllActiveSceneObjects())
     {
         object->Start();
@@ -189,7 +185,8 @@ void Application::StartApplication()
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, 0);
 
-        bulletSimulation->dynamicsWorld->stepSimulation((deltaTime < this->FIXED_DELTA_TIME ? deltaTime : this->FIXED_DELTA_TIME), 10);
+        // TODO move this to a method inside Physics!
+        Physics::GetInstance()->dynamicsWorld->stepSimulation((deltaTime < this->FIXED_DELTA_TIME ? deltaTime : this->FIXED_DELTA_TIME), 10);
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -201,7 +198,7 @@ void Application::StartApplication()
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
-    bulletSimulation->Clear();
+    Physics::GetInstance()->Clear();
 
     glfwTerminate();
 }
