@@ -92,6 +92,8 @@ public:
     // it updates camera orientation when mouse is moved
     void ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean constraintPitch = GL_TRUE);
 
+    void UpdateRotation(float Yaw, float Pitch, float Roll);
+
 private:
     //////////////////////////////////////////
     // it updates the camera reference system

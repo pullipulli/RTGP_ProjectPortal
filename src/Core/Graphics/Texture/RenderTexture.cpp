@@ -15,6 +15,14 @@ RenderTexture::RenderTexture(GLint width, GLint height, const std::string& rende
     this->width = width;
     this->height = height;
 
+    glGenTextures(1, &textureId);
+    glBindTexture(GL_TEXTURE_2D, textureId);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
     // setup of frame buffer
     glGenFramebuffers(1, &rtFrameBufferId);
     glBindFramebuffer(GL_FRAMEBUFFER, rtFrameBufferId);
@@ -44,7 +52,7 @@ void RenderTexture::BindFrameBuffer() const
 {
     // draws the current  camera view to buffer
     glBindFramebuffer(GL_FRAMEBUFFER, rtFrameBufferId);
-    glClearColor(1, 0, 0, 1.f);
+    glClearColor(1, 1, 1, 1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glViewport(0, 0, width, height);
 }

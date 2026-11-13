@@ -24,7 +24,7 @@ public:
     Application(float screenWidth, float screenHeight);
     ~Application();
     void StartApplication();
-    void DrawScene(RenderPass currentRenderPass);
+    void DrawScene(Camera* camera, RenderPass currentRenderPass);
 private:
     int screenWidth = 1920;
     int screenHeight = 1080;
@@ -34,6 +34,7 @@ private:
     float currentFrameTime = 0;
 
     std::unique_ptr<Camera> camera;
+    std::unique_ptr<Camera> portalCamera;
 
     void ApplyCameraMovements();
     std::unique_ptr<Input> input;

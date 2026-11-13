@@ -57,7 +57,7 @@ RenderTexture* ResourceManager::InitializeRenderTexture(const std::string& key, 
 
 Model* ResourceManager::GetModel(const std::string& key)
 {
-    const auto pair = models.find(key);
+    const auto& pair = models.find(key);
 
     if (pair != models.end())   // not found model with this key
         return &pair->second;
@@ -67,7 +67,7 @@ Model* ResourceManager::GetModel(const std::string& key)
 
 Shader* ResourceManager::GetShader(const std::string& key)
 {
-    const auto pair = shaders.find(key);
+    const auto& pair = shaders.find(key);
 
     if (pair != shaders.end())   // not found shader with this key
         return &pair->second;
@@ -78,13 +78,13 @@ Shader* ResourceManager::GetShader(const std::string& key)
 Texture* ResourceManager::GetTexture(const std::string& key)
 {
     // first search against RenderTextures: they are probably less than the Textures
-    const auto renderTexturePair = renderTextures.find(key);
+    const auto& renderTexturePair = renderTextures.find(key);
 
     if (renderTexturePair != renderTextures.end())   // not found renderTexture with this key
         return &renderTexturePair->second;
 
     // then if no RenderTextures match search against the Textures
-    const auto texturePair = textures.find(key);
+    const auto& texturePair = textures.find(key);
 
     if (texturePair != textures.end())   // not found texture with this key
         return &texturePair->second;
@@ -94,7 +94,7 @@ Texture* ResourceManager::GetTexture(const std::string& key)
 
 RenderTexture* ResourceManager::GetRenderTexture(const std::string &key)
 {
-    const auto pair = renderTextures.find(key);
+    const auto& pair = renderTextures.find(key);
 
     if (pair != renderTextures.end())   // not found texture with this key
         return &pair->second;
@@ -107,7 +107,7 @@ std::vector<RenderTexture*> ResourceManager::GetAllRenderTextures()
     std::vector<RenderTexture*> out{};
     out.reserve(renderTextures.size());
 
-    for (auto [_, value] : renderTextures)
+    for (auto& [_, value] : renderTextures)
         {
             out.push_back(&value);
         }

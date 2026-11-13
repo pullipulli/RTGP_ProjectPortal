@@ -40,6 +40,8 @@ Application::Application(float screenWidth, float screenHeight)
 : screenWidth(screenWidth), screenHeight(screenHeight)
 {
     this->camera = std::make_unique<Camera>(glm::vec3(0,0,7), GL_TRUE, 45.f, screenWidth/screenHeight, 0.1f, 100000.f);
+    this->portalCamera = std::make_unique<Camera>(glm::vec3(0,5,0), GL_FALSE, 45.f, screenWidth/screenHeight, 0.1f, 100000.f);
+    this->portalCamera->UpdateRotation(0, -90.f, 0);
 }
 
 Application::~Application()
@@ -96,13 +98,16 @@ void Application::StartApplication()
     Model* cubeModel = resourceManager->InitializeModel("../assets/models/cube.obj");     // I will use a scaled cube to simulate the static floor/plane
     Model* portalModel = resourceManager->InitializeModel("../assets/models/portal.obj");
 
+    Texture* floorTexture = resourceManager->InitializeTexture("../assets/textures/raw_wooden_floor_01_diff_4k.jpg", GL_REPEAT, GL_NEAREST, GL_LINEAR, true);
+
     Material* planeMaterial = &Material::Create(globalShader->GetShaderId())
-                        .AddDiffuse(glm::vec3(0, 1, 0))
+                        .AddDiffuse(glm::vec3(1, 1, 1))
                         .AddSpecular(glm::vec3(0, 0, 0))
-                        .AddShininess(1.f);
+                        .AddShininess(1.f)
+                        .AddTexture(floorTexture->GetTextureResourceId());
 
     Material* portalMaterial = &Material::Create(globalShader->GetShaderId())
-                    .AddDiffuse(glm::vec3(0, 1, 0))
+                    .AddDiffuse(glm::vec3(1, 1, 1))
                     .AddSpecular(glm::vec3(0, 0, 0))
                     .AddShininess(1.f)
                     .AddTexture(portalRenderTexture->GetTextureResourceId());
@@ -173,17 +178,14 @@ void Application::StartApplication()
         for (auto renderTexture: ResourceManager::GetInstance()->GetAllRenderTextures())
         {
             renderTexture->BindFrameBuffer();
-            DrawScene(RenderPass::RenderTexture);
+            DrawScene(portalCamera.get(), RenderPass::RenderTexture);
         }
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glViewport(0, 0, screenWidth, screenHeight);
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        DrawScene(RenderPass::Screen);
-
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, 0);
+        DrawScene(camera.get(), RenderPass::Screen);
 
         // TODO move this to a method inside Physics!
         Physics::GetInstance()->dynamicsWorld->stepSimulation((deltaTime < this->FIXED_DELTA_TIME ? deltaTime : this->FIXED_DELTA_TIME), 10);
@@ -218,7 +220,7 @@ void Application::ApplyCameraMovements()
         camera->ProcessKeyboard(RIGHT, deltaTime);
 }
 
-void Application::DrawScene(RenderPass renderPass)
+void Application::DrawScene(Camera* camera, RenderPass renderPass)
 {
     for (SceneObject* object : SceneObject::GetAllActiveSceneObjects())
     {

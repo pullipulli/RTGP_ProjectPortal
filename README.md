@@ -19,3 +19,4 @@
 ### Other Ideas
 - In the material class you should use different maps for each different uniform parameter type!
 - Refine SceneObject to make RigidBody customizable when instantiated
+- Make the ResourceManager maps use a UNIQUE pointer to the classes instead of a direct reference

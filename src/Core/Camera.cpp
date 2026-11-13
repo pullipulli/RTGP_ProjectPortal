@@ -77,6 +77,13 @@ void Camera::ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean co
     this->UpdateCameraVectors();
 }
 
+void Camera::UpdateRotation(float Yaw, float Pitch, float Roll)
+{
+    this->Yaw = Yaw;
+    this->Pitch = Pitch;
+    this->UpdateCameraVectors();
+}
+
 void Camera::UpdateCameraVectors()
 {
     // it computes the new Front vector using trigonometric calculations using Yaw and Pitch angles
