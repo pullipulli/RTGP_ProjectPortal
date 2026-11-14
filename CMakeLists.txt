@@ -76,6 +76,7 @@ add_executable(RTGPProject_Portal
         src/Core/Graphics/Model/Mesh.cpp
         src/Core/Graphics/Model/Model.cpp
         src/Core/Graphics/Shader.cpp
+        src/Game/Portal.cpp
 )
 
 target_include_directories(RTGPProject_Portal PUBLIC

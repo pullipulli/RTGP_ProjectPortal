@@ -22,7 +22,9 @@ public:
     Material& AddShininess(GLfloat shininess);
     Material& AddTexture(const std::string& textureId);
 
-    Shader& GetShader() const;
+    [[nodiscard]] Shader& GetShader() const;
+
+    [[nodiscard]] Texture* GetTexture() const { return texture; }
 
     Material() = delete;
 private:

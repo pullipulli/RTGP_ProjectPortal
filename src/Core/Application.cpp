@@ -22,6 +22,7 @@
 #include "Core/Camera.h"
 #include "Core/Graphics/Model/Model.h"
 #include "Core/Physics.h"
+#include "Game/Portal.h"
 
 #ifdef _WINDOWS_
     #error windows.h was included!
@@ -33,19 +34,14 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
-#include <../../include/Core/Graphics/Shader.h>
+#include <Core/Graphics/Shader.h>
 
+Application::~Application() = default;
 
 Application::Application(float screenWidth, float screenHeight)
 : screenWidth(screenWidth), screenHeight(screenHeight)
 {
     this->camera = std::make_unique<Camera>(glm::vec3(0,0,7), GL_TRUE, 45.f, screenWidth/screenHeight, 0.1f, 100000.f);
-    this->portalCamera = std::make_unique<Camera>(glm::vec3(0,5,0), GL_FALSE, 45.f, screenWidth/screenHeight, 0.1f, 100000.f);
-    this->portalCamera->UpdateRotation(0, -90.f, 0);
-}
-
-Application::~Application()
-{
 }
 
 void Application::StartApplication()
@@ -57,7 +53,7 @@ void Application::StartApplication()
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-    GLFWwindow* window = glfwCreateWindow(screenWidth, screenHeight, "Portal Project", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(static_cast<int>(screenWidth), static_cast<int>(screenHeight), "Portal Project", nullptr, nullptr);
     if (!window)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -89,7 +85,8 @@ void Application::StartApplication()
     glDepthFunc(GL_LESS);
     glEnable(GL_CULL_FACE);
     ResourceManager* resourceManager = ResourceManager::GetInstance();
-    RenderTexture* portalRenderTexture = resourceManager->InitializeRenderTexture("PortalTexture", 512, 256);
+    RenderTexture* bluePortalRenderTexture = resourceManager->InitializeRenderTexture("BluePortalTexture", 512, 256);
+    RenderTexture* redPortalRenderTexture = resourceManager->InitializeRenderTexture("RedPortalTexture", 512, 256);
 
     Shader* globalShader = resourceManager->InitializeShader("GlobalShader",
         "shaders/vertex/globalShader.vert", "shaders/fragment/globalShader.frag"
@@ -106,19 +103,46 @@ void Application::StartApplication()
                         .AddShininess(1.f)
                         .AddTexture(floorTexture->GetTextureResourceId());
 
-    Material* portalMaterial = &Material::Create(globalShader->GetShaderId())
+    Material* bluePortalMaterial = &Material::Create(globalShader->GetShaderId())
                     .AddDiffuse(glm::vec3(1, 1, 1))
                     .AddSpecular(glm::vec3(0, 0, 0))
                     .AddShininess(1.f)
-                    .AddTexture(portalRenderTexture->GetTextureResourceId());
+                    .AddTexture(bluePortalRenderTexture->GetTextureResourceId());
 
-    SceneObject portalObject{
+    Material* redPortalMaterial = &Material::Create(globalShader->GetShaderId())
+                .AddDiffuse(glm::vec3(1, 1, 1))
+                .AddSpecular(glm::vec3(0, 0, 0))
+                .AddShininess(1.f)
+                .AddTexture(redPortalRenderTexture->GetTextureResourceId());
+
+    Camera behindRedPortalCamera = Camera{glm::vec3(0,5,0), GL_FALSE, 45.f, screenWidth/screenHeight, 0.1f, 100000.f};
+    behindRedPortalCamera.UpdateRotation(0, 90.f, 0);
+
+    Camera behindBluePortalCamera = Camera{glm::vec3(0,5,0), GL_FALSE, 45.f, screenWidth/screenHeight, 0.1f, 100000.f};
+    behindBluePortalCamera.UpdateRotation(0, -90.f, 0);
+
+    bluePortal = make_unique<Portal>(
+        glm::vec3(-10, 1, 0),
+        glm::vec3(90, 0, 0),
+        glm::vec3(.8f),
+        bluePortalMaterial,
+        portalModel->GetModelId(),
+        false,
+        &behindBluePortalCamera
+    );
+
+    redPortal = make_unique<Portal>(
         glm::vec3(-3, 1, 0),
         glm::vec3(90, 0, 0),
         glm::vec3(.8f),
-        portalMaterial,
-        portalModel->GetModelId()
-    };
+        redPortalMaterial,
+        portalModel->GetModelId(),
+        false,
+        &behindRedPortalCamera
+    );
+
+    bluePortal->LinkOtherPortal(redPortal.get());
+    redPortal->LinkOtherPortal(bluePortal.get());
 
     SceneObject planeObject{
         glm::vec3(0, -1, 0),
@@ -155,7 +179,7 @@ void Application::StartApplication()
 
     while(!glfwWindowShouldClose(window))
     {
-        currentFrameTime = glfwGetTime();
+        currentFrameTime = static_cast<float>(glfwGetTime());
         deltaTime = currentFrameTime - lastFrameTime;
         lastFrameTime = currentFrameTime;
 
@@ -175,14 +199,14 @@ void Application::StartApplication()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        for (auto renderTexture: ResourceManager::GetInstance()->GetAllRenderTextures())
-        {
-            renderTexture->BindFrameBuffer();
-            DrawScene(portalCamera.get(), RenderPass::RenderTexture);
-        }
+        bluePortal->GetRenderTexture()->BindFrameBuffer();
+        DrawScene(bluePortal->GetThisPortalCamera(), RenderPass::RenderTexture);
+
+        redPortal->GetRenderTexture()->BindFrameBuffer();
+        DrawScene(redPortal->GetThisPortalCamera(), RenderPass::RenderTexture);
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glViewport(0, 0, screenWidth, screenHeight);
+        glViewport(0, 0, static_cast<int>(screenWidth), static_cast<int>(screenHeight));
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         DrawScene(camera.get(), RenderPass::Screen);
@@ -220,14 +244,14 @@ void Application::ApplyCameraMovements()
         camera->ProcessKeyboard(RIGHT, deltaTime);
 }
 
-void Application::DrawScene(Camera* camera, RenderPass renderPass)
+void Application::DrawScene(const Camera* renderingCamera, const RenderPass currentRenderPass) const
 {
     for (SceneObject* object : SceneObject::GetAllActiveSceneObjects())
     {
-        object->Render(camera->GetViewMatrix(), camera->GetProjectionMatrix(), renderPass);
+        object->Render(renderingCamera->GetViewMatrix(), renderingCamera->GetProjectionMatrix(), currentRenderPass);
     }
 
-    if (renderPass == RenderPass::Screen)
+    if (currentRenderPass == RenderPass::Screen)
     {
         for (SceneObject* object : SceneObject::GetAllActiveSceneObjects())
         {

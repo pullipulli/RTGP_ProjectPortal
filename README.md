@@ -14,9 +14,11 @@
 
 ## TODO LIST
 
-1) Finally start the Portal logic!
+1) Position cameras behind the right portals
+2) Render other portal camera inside his own RenderTexture
 
 ### Other Ideas
 - In the material class you should use different maps for each different uniform parameter type!
 - Refine SceneObject to make RigidBody customizable when instantiated
 - Make the ResourceManager maps use a UNIQUE pointer to the classes instead of a direct reference
+- Implement RAII principles for `RenderTexture`, `Texture`, `Material`, and `Shader`

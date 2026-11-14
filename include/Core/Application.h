@@ -14,6 +14,7 @@ class Physics;
 class Model;
 class Shader;
 class Material;
+class Portal;
 
 typedef float GLfloat;
 
@@ -24,17 +25,18 @@ public:
     Application(float screenWidth, float screenHeight);
     ~Application();
     void StartApplication();
-    void DrawScene(Camera* camera, RenderPass currentRenderPass);
+    void DrawScene(const Camera* renderingCamera, RenderPass currentRenderPass) const;
 private:
-    int screenWidth = 1920;
-    int screenHeight = 1080;
+    float screenWidth = 1920;
+    float screenHeight = 1080;
 
     float deltaTime = 0;
     float lastFrameTime = 0;
     float currentFrameTime = 0;
 
     std::unique_ptr<Camera> camera;
-    std::unique_ptr<Camera> portalCamera;
+    std::unique_ptr<Portal> bluePortal = nullptr;
+    std::unique_ptr<Portal> redPortal = nullptr;
 
     void ApplyCameraMovements();
     std::unique_ptr<Input> input;
