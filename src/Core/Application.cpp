@@ -116,13 +116,13 @@ void Application::StartApplication()
                 .AddTexture(redPortalRenderTexture->GetTextureResourceId());
 
     Camera behindRedPortalCamera = Camera{glm::vec3(0,5,0), GL_FALSE, 45.f, screenWidth/screenHeight, 0.1f, 100000.f};
-    behindRedPortalCamera.UpdateRotation(0, 90.f, 0);
+    behindRedPortalCamera.UpdateRotation(0, -90.f, 0);
 
     Camera behindBluePortalCamera = Camera{glm::vec3(0,5,0), GL_FALSE, 45.f, screenWidth/screenHeight, 0.1f, 100000.f};
     behindBluePortalCamera.UpdateRotation(0, -90.f, 0);
 
     bluePortal = make_unique<Portal>(
-        glm::vec3(-10, 1, 0),
+        glm::vec3(3, .8f, 0),
         glm::vec3(90, 0, 0),
         glm::vec3(.8f),
         bluePortalMaterial,
@@ -132,7 +132,7 @@ void Application::StartApplication()
     );
 
     redPortal = make_unique<Portal>(
-        glm::vec3(-3, 1, 0),
+        glm::vec3(-3, .8f, 0),
         glm::vec3(90, 0, 0),
         glm::vec3(.8f),
         redPortalMaterial,
@@ -145,12 +145,41 @@ void Application::StartApplication()
     redPortal->LinkOtherPortal(bluePortal.get());
 
     SceneObject planeObject{
-        glm::vec3(0, -1, 0),
-        glm::vec3(0),
-        glm::vec3(200, 0.1f, 200),
+        glm::vec3(0.f, -1.f, 0.f),
+        glm::vec3(0.f),
+        glm::vec3(10.f, 0.1f, 10.f),
         planeMaterial,
         cubeModel->GetModelId()
     };
+
+    std::vector<std::unique_ptr<SceneObject>> walls{};
+    walls.emplace_back(std::make_unique<SceneObject>(
+        glm::vec3(0, 2, 0),
+        glm::vec3(0, 0, 0),
+        glm::vec3(5, 3, 0.1),
+        planeMaterial,
+        cubeModel->GetModelId(),
+        false
+    ));
+
+    walls.emplace_back(std::make_unique<SceneObject>(
+        glm::vec3(0, 2, 0),
+        glm::vec3(0, 90, 0),
+        glm::vec3(5, 3, 0.1),
+        planeMaterial,
+        cubeModel->GetModelId(),
+        false
+    ));
+
+    walls.emplace_back(std::make_unique<SceneObject>(
+        glm::vec3(-2.5, 2, 5),
+        glm::vec3(0, 0, 0),
+        glm::vec3(2.5, 3, 0.1),
+        planeMaterial,
+        cubeModel->GetModelId(),
+        false
+    ));
+
 
     PointLight pointLight;
 

@@ -93,6 +93,7 @@ public:
     void ProcessMouseMovement(GLfloat xoffset, GLfloat yoffset, GLboolean constraintPitch = GL_TRUE);
 
     void UpdateRotation(float Yaw, float Pitch, float Roll);
+    void UpdatePosition(const glm::vec3& position);
 
 private:
     //////////////////////////////////////////

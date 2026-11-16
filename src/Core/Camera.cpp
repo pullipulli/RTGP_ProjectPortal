@@ -84,6 +84,11 @@ void Camera::UpdateRotation(float Yaw, float Pitch, float Roll)
     this->UpdateCameraVectors();
 }
 
+void Camera::UpdatePosition(const glm::vec3& position)
+{
+    this->Position = position;
+}
+
 void Camera::UpdateCameraVectors()
 {
     // it computes the new Front vector using trigonometric calculations using Yaw and Pitch angles

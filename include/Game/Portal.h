@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include "Core/Camera.h"
 #include "Core/SceneObject.h"
 #include "Core/Graphics/Material.h"
 
@@ -13,13 +14,7 @@ class Portal : SceneObject
 {
 public:
     Portal(const glm::vec3 &initialPosition, const glm::vec3 &initialRotation, const glm::vec3 &initialScale,
-        Material *material, const std::string &modelResourceId, bool hasRigidbody,
-        Camera *thisPortalCamera)
-        : SceneObject(initialPosition, initialRotation, initialScale, material, modelResourceId, hasRigidbody),
-          thisPortalCamera(thisPortalCamera),
-          renderTexture(dynamic_cast<RenderTexture*>(material->GetTexture()))
-    {
-    }
+        Material *material, const std::string &modelResourceId, bool hasRigidbody, Camera *thisPortalCamera);
 
     ~Portal() override = default;
 

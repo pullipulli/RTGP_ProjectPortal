@@ -14,8 +14,8 @@
 
 ## TODO LIST
 
-1) Position cameras behind the right portals
-2) Render other portal camera inside his own RenderTexture
+1) Some debugging tools (drawing debug lines)
+2) Find the Portal Cameras sweet spot
 
 ### Other Ideas
 - In the material class you should use different maps for each different uniform parameter type!
